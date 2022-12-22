@@ -83,6 +83,16 @@
 (def-foreign-call uv_prepare_stop ((handle (* uv_prepare_t)))
   :returning :int)
 
+;;; Check handle
+(def-foreign-call uv_check_init ((event-loop (* uv_loop_t)) (handle (* uv_check_t)))
+  :returning :int)
+
+(def-foreign-call uv_check_start ((handle (* uv_check_t)) (cb :foreign-address))
+  :returning :int)
+
+(def-foreign-call uv_check_stop ((handle (* uv_check_t)))
+  :returning :int)
+
 ;;; Idle handle
 (def-foreign-call uv_idle_init ((event-loop (* uv_loop_t)) (idle (* uv_idle_t)))
   :returning :int)
