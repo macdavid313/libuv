@@ -94,11 +94,18 @@
   :returning :int)
 
 ;;; Idle handle
-(def-foreign-call uv_idle_init ((event-loop (* uv_loop_t)) (idle (* uv_idle_t)))
+(def-foreign-call uv_idle_init ((event-loop (* uv_loop_t)) (handle (* uv_idle_t)))
   :returning :int)
 
-(def-foreign-call uv_idle_start ((idle (* uv_idle_t)) (cb :foreign-address))
+(def-foreign-call uv_idle_start ((handle (* uv_idle_t)) (cb :foreign-address))
   :returning :int)
 
-(def-foreign-call uv_idle_stop ((idle (* uv_idle_t)))
+(def-foreign-call uv_idle_stop ((handle (* uv_idle_t)))
+  :returning :int)
+
+;;; Async handle
+(def-foreign-call uv_async_init ((event-loop (* uv_loop_t)) (handle (* uv_async_t)) (cb :foreign-address))
+  :returning :int)
+
+(def-foreign-call uv_async_send ((handle (* uv_async_t)))
   :returning :int)
