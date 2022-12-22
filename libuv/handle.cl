@@ -196,6 +196,60 @@
 (def-foreign-call uv_process_get_pid ((handle (* uv_process_t)))
   :returning uv_pid_t)
 
+;;; Stream handle
+(def-foreign-call uv_shutdown ((req (* uv_shutdown_t)) (handle (* uv_stream_t)) (cb :foreign-address))
+  :returning :int)
+
+(def-foreign-call uv_listen ((stream (* uv_stream_t)) (backlog :int) (cb :foreign-address))
+  :returning :int)
+
+(def-foreign-call uv_accept ((server (* uv_stream_t)) (client (* uv_stream_t)))
+  :returning :int)
+
+(def-foreign-call uv_read_start ((stream (* uv_stream_t)) (alloc_cb :foreign-address) (read_cb :foreign-address))
+  :returning :int)
+
+(def-foreign-call uv_read_stop ((handle (* uv_stream_t)))
+  :returning :int)
+
+(def-foreign-call uv_write ((req (* uv_write_t))
+                            (handle (* uv_stream_t))
+                            (bufs (:array uv_buf_t))
+                            (nbufs :unsigned-int)
+                            (cb :foreign-address))
+  :returning :int)
+
+(def-foreign-call uv_write2 ((req (* uv_write_t))
+                             (handle (* uv_stream_t))
+                             (bufs (:array uv_buf_t))
+                             (nbufs :unsigned-int)
+                             (send_handle (* uv_stream_t))
+                             (cb :foreign-address))
+  :returning :int)
+
+(def-foreign-call uv_try_write ((handle (* uv_stream_t))
+                                (bufs (:array uv_buf_t))
+                                (nbufs :unsigned-int))
+  :returning :int)
+
+(def-foreign-call uv_try_write2 ((handle (* uv_stream_t))
+                                 (bufs (:array uv_buf_t))
+                                 (nbufs :unsigned-int)
+                                 (send_handle (* uv_stream_t)))
+  :returning :int)
+
+(def-foreign-call uv_is_readable ((handle (* uv_stream_t)))
+  :returning :int)
+
+(def-foreign-call uv_is_writable ((handle (* uv_stream_t)))
+  :returning :int)
+
+(def-foreign-call uv_stream_set_blocking ((handle (* uv_stream_t)) (blocking :int))
+  :returning :int)
+
+(def-foreign-call uv_stream_get_write_queue_size ((stream (* uv_stream_t)))
+  :returning size_t)
+
 ;;; FS Poll handle
 (def-foreign-call uv_fs_poll_init ((event-loop (* uv_loop_t)) (handle (* uv_fs_poll_t)))
   :returning :int)
