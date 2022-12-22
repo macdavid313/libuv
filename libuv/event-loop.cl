@@ -29,6 +29,9 @@
 (def-foreign-call uv_stop ((event-loop (* uv_loop_t)))
   :returning :void)
 
+(def-foreign-call uv_loop_size (:void)
+  :returning size_t)
+
 (def-foreign-call uv_backend_fd ((event-loop (* uv_loop_t)))
   :returning :int)
 
