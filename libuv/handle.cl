@@ -73,6 +73,16 @@
 (def-foreign-call uv_timer_get_due_in ((handle (* uv_timer_t)))
   :returning uint64_t)
 
+;;; Prepare handle
+(def-foreign-call uv_prepare_init ((event-loop (* uv_loop_t)) (handle (* uv_prepare_t)))
+  :returning :int)
+
+(def-foreign-call uv_prepare_start ((handle (* uv_prepare_t)) (cb :foreign-address))
+  :returning :int)
+
+(def-foreign-call uv_prepare_stop ((handle (* uv_prepare_t)))
+  :returning :int)
+
 ;;; Idle handle
 (def-foreign-call uv_idle_init ((event-loop (* uv_loop_t)) (idle (* uv_idle_t)))
   :returning :int)
