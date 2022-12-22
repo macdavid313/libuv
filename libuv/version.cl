@@ -12,6 +12,6 @@
 ;;             (ldb (byte 8 0) version)))) ; patch
 
 (ff:def-foreign-call uv_version_string (:void)
-  :returning ((* :char) string)
+  :returning ((* :char) simple-string)
   :strings-convert t
   :documentation "Returns the libuv version number as a string. For non-release versions the version suffix is included.")
