@@ -6,6 +6,14 @@
 (def-foreign-type uv_loop_t (:array :unsigned-char 848))
 
 
+;;; uv_uid_t
+(def-foreign-type uv_uid_t :unsigned-int)
+
+
+;;; uv_gid_t
+(def-foreign-type uv_gid_t :unsigned-int)
+
+
 ;;; Error constants
 ;;; http://docs.libuv.org/en/v1.x/errors.html#error-constants
 (defcenum uv_error_t

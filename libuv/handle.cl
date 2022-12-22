@@ -143,6 +143,59 @@
 (def-foreign-call uv_signal_stop ((handle (* uv_signal_t)))
   :returning :int)
 
+;;; Process handle
+(defcenum uv_process_flags
+  (:UV_PROCESS_SETUID #.(ash 1 0))
+  (:UV_PROCESS_SETGID #.(ash 1 1))
+  (:UV_PROCESS_WINDOWS_VERBATIM_ARGUMENTS #.(ash 1 2))
+  (:UV_PROCESS_DETACHED #.(ash 1 3))
+  (:UV_PROCESS_WINDOWS_HIDE #.(ash 1 4))
+  (:UV_PROCESS_WINDOWS_HIDE_CONSOLE #.(ash 1 5))
+  (:UV_PROCESS_WINDOWS_HIDE_GUI #.(ash 1 6)))
+
+(defcenum uv_stdio_flags
+  (:UV_IGNORE        #x00)
+  (:UV_CREATE_PIPE   #x01)
+  (:UV_INHERIT_FD    #x02)
+  (:UV_INHERIT_STREAM #x04)
+  (:UV_READABLE_PIPE  #x10)
+  (:UV_WRITABLE_PIPE  #x20)
+  (:UV_NONBLOCK_PIPE  #x40))
+
+(def-foreign-type uv_stdio_container_t
+    (:struct
+     (flags uv_stdio_flags)
+     (data (:union (stream (* uv_stream_t))
+                   (fd :int)))))
+
+(def-foreign-type uv_process_options_t
+    (:struct
+     (exit_cb (* :void))
+     (file (* :char))
+     (args (:array (* :char)))
+     (env (:array (* :char)))
+     (cwd (* :char))
+     (flags :unsigned-int)
+     (stdio_count :int)
+     (stdio (* uv_stdio_container_t))
+     (uid uv_uid_t)
+     (gid uv_gid_t)))
+
+(def-foreign-call uv_disable_stdio_inheritance (:void)
+  :returning :void)
+
+(def-foreign-call uv_spawn ((event-loop (* uv_loop_t)) (handle (* uv_process_t)) (options (* uv_process_options_t)))
+  :returning :int)
+
+(def-foreign-call uv_process_kill ((handle (* uv_process_t)) (signum :int))
+  :returning :int)
+
+(def-foreign-call uv_kill ((pid :int) (signum :int))
+  :returning :int)
+
+(def-foreign-call uv_process_get_pid ((handle (* uv_process_t)))
+  :returning uv_pid_t)
+
 ;;; FS Poll handle
 (def-foreign-call uv_fs_poll_init ((event-loop (* uv_loop_t)) (handle (* uv_fs_poll_t)))
   :returning :int)

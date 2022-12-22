@@ -16,7 +16,7 @@ void type_name(FILE *output, int signed_p, int size) {
     switch(size) {
     case 1: fprintf(output, ":unsigned-char"); break;
     case 2: fprintf(output, ":unsigned-short"); break;
-    case 4: fprintf(output, ":unisgned-int"); break;
+    case 4: fprintf(output, ":unsigned-int"); break;
     case 8: fprintf(output, ":unsigned-long-long"); break;
     default: goto error;
     }
@@ -37,6 +37,18 @@ int main(int argc, char** argv) {
 
   fputs(";;; uv_loop_t\n", output);
   fprintf(output, "(def-foreign-type uv_loop_t (:array :unsigned-char %lu))\n", uv_loop_size());
+  fputs("\n\n", output);
+
+  fputs(";;; uv_uid_t\n", output);
+  fputs("(def-foreign-type uv_uid_t ", output);
+  type_name(output, TYPE_SIGNED_P(uv_uid_t), sizeof(uv_uid_t));
+  fputs(")\n", output);
+  fputs("\n\n", output);
+
+  fputs(";;; uv_gid_t\n", output);
+  fputs("(def-foreign-type uv_gid_t ", output);
+  type_name(output, TYPE_SIGNED_P(uv_gid_t), sizeof(uv_gid_t));
+  fputs(")\n", output);
   fputs("\n\n", output);
 
   fputs(";;; Error constants\n", output);
