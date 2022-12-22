@@ -48,6 +48,31 @@
 (def-foreign-call uv_handle_size ((type :int))
   :returning size_t)
 
+;;; Timer handle
+(def-foreign-call uv_timer_init ((event-loop (* uv_loop_t)) (handle (* uv_timer_t)))
+  :returning :int)
+
+(def-foreign-call uv_timer_start ((handle (* uv_timer_t))
+                                  (cb :foreign-address)
+                                  (timeout uint64_t)
+                                  (repeat uint64_t))
+  :returning :int)
+
+(def-foreign-call uv_timer_stop ((handle (* uv_timer_t)))
+  :returning :int)
+
+(def-foreign-call uv_timer_again ((handle (* uv_timer_t)))
+  :returning :int)
+
+(def-foreign-call uv_timer_set_repeat ((handle (* uv_timer_t)) (repeat uint64_t))
+  :returning :void)
+
+(def-foreign-call uv_timer_get_repeat ((handle (* uv_timer_t)))
+  :returning uint64_t)
+
+(def-foreign-call uv_timer_get_due_in ((handle (* uv_timer_t)))
+  :returning uint64_t)
+
 ;;; Idle handle
 (def-foreign-call uv_idle_init ((loop (* uv_loop_t)) (idle (* uv_idle_t)))
   :returning :int)
