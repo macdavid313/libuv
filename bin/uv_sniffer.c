@@ -39,62 +39,41 @@ int main(int argc, char** argv) {
   fprintf(output, "(def-foreign-type uv_loop_t (:array :unsigned-char %lu))\n", uv_loop_size());
   fputs("\n\n", output);
 
-  fputs(";;; C Enum: uv_run_mode\n", output);
-  fputs(";;; http://docs.libuv.org/en/v1.x/loop.html#c.uv_run_mode\n", output);
-  fprintf(output, "(defconstant +UV_RUN_DEFAULT+ %d)\n", UV_RUN_DEFAULT);
-  fprintf(output, "(defconstant +UV_RUN_ONCE+ %d)\n", UV_RUN_ONCE);
-  fprintf(output, "(defconstant +UV_RUN_NOWAIT+ %d)\n", UV_RUN_NOWAIT);
-  fputs("\n\n", output);
-
-  fputs(";;; C Enum: uv_loop_option\n", output);
-  fprintf(output, "(defconstant +UV_LOOP_BLOCK_SIGNAL+ %d)\n", UV_LOOP_BLOCK_SIGNAL);
-  fprintf(output, "(defconstant +UV_METRICS_IDLE_TIME+ %d)\n", UV_METRICS_IDLE_TIME);
-  fputs("\n\n", output);
-
   fputs(";;; Error constants\n", output);
   fputs(";;; http://docs.libuv.org/en/v1.x/errors.html#error-constants\n", output);
-#define XX(name, _) fprintf(output, "\n   (cons :UV_%s %d)", #name, UV_##name);
-  fputs("(defconstant +uv-error-enum+\n  (list", output);
+#define XX(name, _) fprintf(output, "\n  (:UV_%s %d)", #name, UV_##name);
+  fputs("(defcenum uv_error_t", output);
   UV_ERRNO_MAP(XX);
-  fputs("))\n", output);
-#undef XX
-#define XX(name, str) fprintf(output, "(defconstant +UV_%s+ %d %s)\n", #name, UV_##name, #str);
-  UV_ERRNO_MAP(XX);
+  fputs(")\n", output);
 #undef XX
   fputs("\n\n", output);
 
   fputs(";;; Handle types\n", output);
   fputs(";;; http://docs.libuv.org/en/v1.x/handle.html#c.uv_handle_type\n", output);
-#define XX(name, _) fprintf(output, "\n   (cons :UV_%s %d)", #name, UV_##name);
- fputs("(defconstant +uv-handle-enum+\n  (list", output);
- fprintf(output, "\n   (cons :UV_UNKNOWN_HANDLE %d)", UV_UNKNOWN_HANDLE);
+#define XX(name, _) fprintf(output, "\n  (:UV_%s %d)", #name, UV_##name);
+ fputs("(defcenum uv_handle_type", output);
+ fprintf(output, "\n  (:UV_UNKNOWN_HANDLE %d)", UV_UNKNOWN_HANDLE);
  UV_HANDLE_TYPE_MAP(XX);
- fprintf(output, "\n   (cons :UV_HANDLE_TYPE_MAX %d)", UV_HANDLE_TYPE_MAX);
- fputs("))\n", output);
+ fprintf(output, "\n  (:UV_HANDLE_TYPE_MAX %d)", UV_HANDLE_TYPE_MAX);
+ fputs(")\n", output);
 #undef XX
- fprintf(output, "(defconstant +UV_UNKNOWN_HANDLE+ %d)\n", UV_UNKNOWN_HANDLE);
-#define XX(name, type) fprintf(output, "(defconstant +UV_%s+ %d)\n", #name, UV_##name); \
-  fprintf(output, "(def-foreign-type uv_%s_t (:array :unsigned-char %lu))\n", #type, uv_handle_size(UV_##name));
+#define XX(name, type) fprintf(output, "(def-foreign-type uv_%s_t (:array :unsigned-char %lu))\n", #type, uv_handle_size(UV_##name));
  UV_HANDLE_TYPE_MAP(XX);
 #undef XX
- fprintf(output, "(defconstant +UV_HANDLE_TYPE_MAX+ %d)\n", UV_HANDLE_TYPE_MAX);
  fputs("\n\n", output);
 
  fputs(";;; Req types\n", output);
  fputs(";;; http://docs.libuv.org/en/v1.x/request.html#c.uv_req_t.type\n", output);
-#define XX(name, _) fprintf(output, "\n   (cons :UV_%s %d)", #name, UV_##name);
- fputs("(defconstant +uv-req-enum+\n  (list", output);
- fprintf(output, "\n   (cons :UV_UNKNOWN_REQ %d)", UV_UNKNOWN_REQ);
+#define XX(name, _) fprintf(output, "\n  (:UV_%s %d)", #name, UV_##name);
+ fputs("(defcenum uv_req_type", output);
+ fprintf(output, "\n  (:UV_UNKNOWN_REQ %d)", UV_UNKNOWN_REQ);
  UV_REQ_TYPE_MAP(XX);
- fprintf(output, "\n   (cons :UV_REQ_TYPE_MAX %d)", UV_REQ_TYPE_MAX);
- fputs("))\n", output);
+ fprintf(output, "\n  (:UV_REQ_TYPE_MAX %d)", UV_REQ_TYPE_MAX);
+ fputs(")\n", output);
 #undef XX
- fprintf(output, "(defconstant +UV_UNKNOWN_REQ+ %d)\n", UV_UNKNOWN_REQ);
-#define XX(name, type) fprintf(output, "(defconstant +UV_%s+ %d)\n", #name, UV_##name); \
-  fprintf(output, "(def-foreign-type uv_%s_t (:array :unsigned-char %lu))\n", #type, uv_req_size(UV_##name));
+#define XX(name, type) fprintf(output, "(def-foreign-type uv_%s_t (:array :unsigned-char %lu))\n", #type, uv_req_size(UV_##name));
  UV_REQ_TYPE_MAP(XX);
 #undef XX
- fprintf(output, "(defconstant +UV_REQ_TYPE_MAX+ %d)\n", UV_REQ_TYPE_MAX);
  fputs("\n\n", output);
 
  fputs(";;; Misc\n", output);

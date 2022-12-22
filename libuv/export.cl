@@ -15,6 +15,9 @@
     (export 'int32_t)
     (export 'int64_t)
 
+    (export 'foreign-enum-value)
+    (export 'foreign-enum-keyword)
+
     (export 'in_addr)
     (export 'in6_addr)
     (export 'sockaddr)

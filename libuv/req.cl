@@ -14,9 +14,9 @@
 (def-foreign-call uv_req_get_type ((req (* uv_req_t)))
   :returning :int)
 
-(def-foreign-call uv_req_type_name ((type :int fixnum))
+(def-foreign-call uv_req_type_name ((type uv_req_type fixnum))
   :returning ((* :char) simple-string)
   :strings-convert t)
 
-(def-foreign-call uv_req_size ((type :int fixnum))
+(def-foreign-call uv_req_size ((type uv_req_type fixnum))
   :returning size_t)

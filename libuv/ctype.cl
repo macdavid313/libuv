@@ -54,3 +54,31 @@
      (ai_addr (* :void))
      (ai_canonname (* :void))
      (ai_next (* :void))))
+
+;;; C enums
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defparameter .cenum-table. (make-hash-table :test 'eq)))
+
+(defmacro defcenum (name &body enum-list)
+  (let* ((table (gensym))
+         (items (loop for (k v) in enum-list
+                      collect `(setf (gethash ,k ,table) ,v))))
+    `(let ((,table (make-hash-table :test 'eq)))
+       ,@items
+       (setf (gethash ',name .cenum-table.) ,table)
+       (def-foreign-type ,name :int)
+       ',name)))
+
+(defun foreign-enum-value (type k)
+  (multiple-value-bind (v exists-p)
+      (gethash k (gethash type .cenum-table.))
+    (when (not exists-p)
+      (error "cannot find value in enum '~a by keword: :~a" type k))
+    v))
+
+(defun foreign-enum-keyword (type v)
+  (maphash (lambda (k val)
+             (when (= val v)
+               (return-from foreign-enum-keyword k)))
+           (gethash type .cenum-table.))
+  (error "Cannot find keyword in enum '~a by value ~d" type v))

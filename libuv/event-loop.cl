@@ -1,6 +1,15 @@
 ;;;; event-loop.cl
 (in-package #:libuv)
 
+(defcenum uv_loop_option
+  (:UV_LOOP_BLOCK_SIGNAL 0)
+  (:UV_METRICS_IDLE_TIME 1))
+
+(defcenum uv_run_mode
+  (:UV_RUN_DEFAULT 0)
+  (:UV_RUN_ONCE 1)
+  (:UV_RUN_NOWAIT 2))
+
 (def-foreign-call uv_loop_init ((event-loop (* uv_loop_t)))
   :returning :int)
 
@@ -11,7 +20,7 @@
   :returning ((* uv_loop_t))
   :strings-convert nil)
 
-(def-foreign-call uv_run ((event-loop (* uv_loop_t)) (uv_run_mode :int))
+(def-foreign-call uv_run ((event-loop (* uv_loop_t)) (mode uv_run_mode))
   :returning :int)
 
 (def-foreign-call uv_loop_alive ((event-loop (* uv_loop_t)))

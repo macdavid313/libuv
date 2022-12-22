@@ -41,11 +41,11 @@
 (def-foreign-call uv_handle_get_type ((handle (* uv_handle_t)))
   :returning :int)
 
-(def-foreign-call uv_handle_type_name ((type :int))
+(def-foreign-call uv_handle_type_name ((type uv_handle_type))
   :returning ((* :char) string)
   :strings-convert t)
 
-(def-foreign-call uv_handle_size ((type :int))
+(def-foreign-call uv_handle_size ((type uv_handle_type))
   :returning size_t)
 
 ;;; Timer handle
