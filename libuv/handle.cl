@@ -139,5 +139,6 @@
 
 (def-foreign-call uv_fs_poll_getpath ((handle (* uv_fs_poll_t))
                                       (buffer (* :char))
-                                      (size size_t))
-  :returning :int)
+                                      (size (* size_t)))
+  :returning :int
+  :strings-convert nil)
