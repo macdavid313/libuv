@@ -98,9 +98,10 @@
 (def-foreign-call uv_library_shutdown (:void)
   :returning :void)
 
+;;; FIXME: `ff::build-struct-pass-spec' is broken on uv_buf_init, 22/12/2022
 ;; (def-foreign-call uv_buf_init ((base (* :char)) (len :unsigned-int))
-;;   :returning uv_buf_t
 ;;   :strings-convert nil
+;;   :returning uv_buf_t
 ;;   :pass-structs-by-value t)
 
 (def-foreign-call uv_setup_args ((argc :int)
