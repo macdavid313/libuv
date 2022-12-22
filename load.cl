@@ -12,8 +12,10 @@
                               "uv-constants"
                               "version"
                               "error"
+                              "misc"
                               "event-loop"
                               "handle"
+                              "req"
                               "export"))
 
   ;; compile and load
