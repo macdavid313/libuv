@@ -74,7 +74,7 @@
   :returning uint64_t)
 
 ;;; Idle handle
-(def-foreign-call uv_idle_init ((loop (* uv_loop_t)) (idle (* uv_idle_t)))
+(def-foreign-call uv_idle_init ((event-loop (* uv_loop_t)) (idle (* uv_idle_t)))
   :returning :int)
 
 (def-foreign-call uv_idle_start ((idle (* uv_idle_t)) (cb :foreign-address))

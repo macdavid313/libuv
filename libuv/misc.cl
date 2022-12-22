@@ -246,10 +246,10 @@
 (def-foreign-call uv_hrtime (:void)
   :returning uint64_t)
 
-(def-foreign-call uv_print_all_handles ((loop (* uv_loop_t)) (stream :foreign-address))
+(def-foreign-call uv_print_all_handles ((event-loop (* uv_loop_t)) (stream :foreign-address))
   :returning :void)
 
-(def-foreign-call uv_print_active_handles ((loop (* uv_loop_t)) (stream :foreign-address))
+(def-foreign-call uv_print_active_handles ((event-loop (* uv_loop_t)) (stream :foreign-address))
   :returning :void)
 
 (def-foreign-call uv_os_environ ((envitems (:array uv_env_item_t) (simple-array uv_env_item_t))
@@ -292,7 +292,7 @@
 (def-foreign-call uv_gettimeofday ((tv (* uv_timeval64_t)))
   :returning :int)
 
-(def-foreign-call uv_random ((loop (* uv_loop_t))
+(def-foreign-call uv_random ((event-loop (* uv_loop_t))
                              (req (* uv_random_t))
                              (buf (* :void))
                              (buflen size_t)
