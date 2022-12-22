@@ -43,3 +43,17 @@
 
 (def-foreign-call uv_loop_set_data ((event-loop (* uv_loop_t)) (data (* :void)))
   :returning ((* :void)))
+
+;;; Metrics operations
+(def-foreign-type uv_metrics_t
+    (:struct
+     (loop_count uint64_t)
+     (events uint64_t)
+     (events_waiting uint64_t)
+     (reserved (:array uint64_t 13))))
+
+(def-foreign-call uv_metrics_idle_time ((event-loop (* uv_loop_t)))
+  :returning uint64_t)
+
+(def-foreign-call uv_metrics_info ((event-loop (* uv_loop_t)) (metrics (* uv_metrics_t)))
+  :returning :int)
