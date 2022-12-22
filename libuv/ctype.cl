@@ -53,7 +53,7 @@
      (ai_addrlen size_t)
      (ai_addr (* :void))
      (ai_canonname (* :void))
-     (ai_next (* :void))))
+     (ai_next (* addrinfo))))
 
 ;;; C enums
 (eval-when (:compile-toplevel :load-toplevel :execute)
