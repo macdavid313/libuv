@@ -122,3 +122,22 @@
 
 (def-foreign-call uv_signal_stop ((handle (* uv_signal_t)))
   :returning :int)
+
+;;; FS Poll handle
+(def-foreign-call uv_fs_poll_init ((event-loop (* uv_loop_t)) (handle (* uv_fs_poll_t)))
+  :returning :int)
+
+(def-foreign-call uv_fs_poll_start ((handle (* uv_fs_poll_t))
+                                    (cb :foreign-address)
+                                    (path (* :char) simple-string)
+                                    (iterval :unsigned-int))
+  :returning :int
+  :strings-convert t)
+
+(def-foreign-call uv_fs_poll_stop ((handle (* uv_fs_poll_t)))
+  :returning :int)
+
+(def-foreign-call uv_fs_poll_getpath ((handle (* uv_fs_poll_t))
+                                      (buffer (* :char))
+                                      (size size_t))
+  :returning :int)
