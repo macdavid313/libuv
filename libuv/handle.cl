@@ -110,6 +110,26 @@
 (def-foreign-call uv_async_send ((handle (* uv_async_t)))
   :returning :int)
 
+;;; Poll handle
+(defcenum uv_poll_event
+  (:UV_READABLE 1)
+  (:UV_WRITABLE  2)
+  (:UV_DISCONNECT 4)
+  (:UV_PRIORITIZED 8))
+
+(def-foreign-call uv_poll_init ((event-loop (* uv_loop_t)) (handle (* uv_poll_t)) (fd :int))
+  :returning :int)
+
+(def-foreign-call uv_poll_init_socket ((event-loop (* uv_loop_t)) (handle (* uv_poll_t)) (socket uv_os_sock_t))
+  :returning :int
+  :pass-structs-by-value t)
+
+(def-foreign-call uv_poll_start ((handle (* uv_poll_t)) (events :int) (cb :foreign-address))
+  :returning :int)
+
+(def-foreign-call uv_poll_stop ((handle (* uv_poll_t)))
+  :returning :int)
+
 ;;; Signal handle
 (def-foreign-call uv_signal_init ((event-loop (* uv_loop_t)) (handle (* uv_signal_t)))
   :returning :int)
