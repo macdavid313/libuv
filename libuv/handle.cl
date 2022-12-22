@@ -109,3 +109,16 @@
 
 (def-foreign-call uv_async_send ((handle (* uv_async_t)))
   :returning :int)
+
+;;; Signal handle
+(def-foreign-call uv_signal_init ((event-loop (* uv_loop_t)) (handle (* uv_signal_t)))
+  :returning :int)
+
+(def-foreign-call uv_signal_start ((handle (* uv_signal_t)) (cb :foreign-address) (signum :int))
+  :returning :int)
+
+(def-foreign-call uv_signal_start_oneshot ((handle (* uv_signal_t)) (cb :foreign-address) (signum :int))
+  :returning :int)
+
+(def-foreign-call uv_signal_stop ((handle (* uv_signal_t)))
+  :returning :int)
