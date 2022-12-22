@@ -1,7 +1,7 @@
 ;;;; export.cl
 (in-package #:libuv)
 
-(eval-when (:load-toplevel :execute)
+(eval-when (:compile-toplevel :load-toplevel :execute)
   (let ((*package* (find-package :libuv)))
     (export 'sszie_t)
     (export 'size_t)

@@ -45,6 +45,9 @@
   :returning ((* :char) string)
   :strings-convert t)
 
+(def-foreign-call uv_handle_size ((type :int))
+  :returning size_t)
+
 ;;; Idle handle
 (def-foreign-call uv_idle_init ((loop (* uv_loop_t)) (idle (* uv_idle_t)))
   :returning :int)
