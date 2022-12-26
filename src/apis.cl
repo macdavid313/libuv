@@ -954,11 +954,22 @@
 (def-foreign-call uv_library_shutdown (:void)
   :returning :void)
 
-;;; FIXME: `ff::build-struct-pass-spec' is broken on uv_buf_init, 22/12/2022
+;; we don't really need it ...
 ;; (def-foreign-call uv_buf_init ((base (* :char)) (len :unsigned-int))
 ;;   :strings-convert nil
 ;;   :returning uv_buf_t
 ;;   :pass-structs-by-value t)
+
+(defun uv_buf_init (len)
+  (let ((buf (allocate-fobject 'uv_buf_t :c)))
+    (setf (fslot-value-typed 'uv_buf_t :c buf 'len) len)
+    (setf (fslot-value-typed 'uv_buf_t :c buf 'base)
+          (allocate-fobject :char :c len))
+    buf))
+
+(defun uv_buf_free (buf)
+  (free-fobject (fslot-value-typed 'uv_buf_t :c buf 'base))
+  (free-fobject buf))
 
 (def-foreign-call uv_setup_args ((argc :int)
                                  (argv (:array (* :char)) (simple-array simple-string)))
