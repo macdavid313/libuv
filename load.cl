@@ -8,14 +8,14 @@
     (pushnew :libuv *features*))
 
   (defparameter *libuv-files* (list "package"
-                                    "ctype"
+                                    "prelude"
                                     "uv-constants"
                                     "apis"
                                     "export"))
 
   ;; compile and load
   (dolist (file *libuv-files*)
-    (compile-file (merge-pathnames (format nil "libuv/~a.cl" file) *load-pathname*)
+    (compile-file (merge-pathnames (format nil "src/~a.cl" file) *load-pathname*)
                   :load-after-compile t))
 
   ;; write to single fasl
@@ -26,7 +26,7 @@
                        :if-does-not-exist :create)
     (loop with buffer = (make-array 4096 :element-type '(unsigned-byte 8))
           for file in *libuv-files*
-          do (with-open-file (in (merge-pathnames (format nil "libuv/~a.fasl" file) *load-pathname*)
+          do (with-open-file (in (merge-pathnames (format nil "src/~a.fasl" file) *load-pathname*)
                                  :direction :input
                                  :element-type '(unsigned-byte 8))
                (let ((count (read-sequence buffer in)))
