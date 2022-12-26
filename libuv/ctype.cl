@@ -55,6 +55,12 @@
      (ai_canonname (* :void))
      (ai_next (* addrinfo))))
 
+(def-foreign-type uv_buf_t
+    (:struct
+     (base (* :char))
+     (len #+windows :unisgned-long
+          #-windows size_t)))
+
 ;;; C enums
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defparameter .cenum-table. (make-hash-table :test 'eq)))

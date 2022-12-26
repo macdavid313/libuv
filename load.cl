@@ -10,12 +10,7 @@
   (defparameter *libuv-files* (list "package"
                                     "ctype"
                                     "uv-constants"
-                                    "version"
-                                    "error"
-                                    "misc"
-                                    "event-loop"
-                                    "handle"
-                                    "req"
+                                    "apis"
                                     "export"))
 
   ;; compile and load
