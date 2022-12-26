@@ -16,7 +16,7 @@
 
 ;;; Error constants
 ;;; http://docs.libuv.org/en/v1.x/errors.html#error-constants
-(defcenum uv_error_t
+(def-foreign-enum uv_error_t
   (:UV_E2BIG -7)
   (:UV_EACCES -13)
   (:UV_EADDRINUSE -98)
@@ -103,7 +103,7 @@
 
 ;;; Handle types
 ;;; http://docs.libuv.org/en/v1.x/handle.html#c.uv_handle_type
-(defcenum uv_handle_type
+(def-foreign-enum uv_handle_type
   (:UV_UNKNOWN_HANDLE 0)
   (:UV_ASYNC 1)
   (:UV_CHECK 2)
@@ -142,7 +142,7 @@
 
 ;;; Req types
 ;;; http://docs.libuv.org/en/v1.x/request.html#c.uv_req_t.type
-(defcenum uv_req_type
+(def-foreign-enum uv_req_type
   (:UV_UNKNOWN_REQ 0)
   (:UV_REQ 1)
   (:UV_CONNECT 2)

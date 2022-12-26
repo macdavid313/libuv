@@ -59,7 +59,7 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defparameter .cenum-table. (make-hash-table :test 'eq)))
 
-(defmacro defcenum (name &body enum-list)
+(defmacro def-foreign-enum (name &body enum-list)
   (let* ((table (gensym))
          (items (loop for (k v) in enum-list
                       collect `(setf (gethash ,k ,table) ,v))))

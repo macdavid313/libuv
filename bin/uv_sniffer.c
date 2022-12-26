@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
   fputs(";;; Error constants\n", output);
   fputs(";;; http://docs.libuv.org/en/v1.x/errors.html#error-constants\n", output);
 #define XX(name, _) fprintf(output, "\n  (:UV_%s %d)", #name, UV_##name);
-  fputs("(defcenum uv_error_t", output);
+  fputs("(def-foreign-enum uv_error_t", output);
   UV_ERRNO_MAP(XX);
   fputs(")\n", output);
 #undef XX
@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
   fputs(";;; Handle types\n", output);
   fputs(";;; http://docs.libuv.org/en/v1.x/handle.html#c.uv_handle_type\n", output);
 #define XX(name, _) fprintf(output, "\n  (:UV_%s %d)", #name, UV_##name);
- fputs("(defcenum uv_handle_type", output);
+ fputs("(def-foreign-enum uv_handle_type", output);
  fprintf(output, "\n  (:UV_UNKNOWN_HANDLE %d)", UV_UNKNOWN_HANDLE);
  UV_HANDLE_TYPE_MAP(XX);
  fprintf(output, "\n  (:UV_HANDLE_TYPE_MAX %d)", UV_HANDLE_TYPE_MAX);
@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
  fputs(";;; Req types\n", output);
  fputs(";;; http://docs.libuv.org/en/v1.x/request.html#c.uv_req_t.type\n", output);
 #define XX(name, _) fprintf(output, "\n  (:UV_%s %d)", #name, UV_##name);
- fputs("(defcenum uv_req_type", output);
+ fputs("(def-foreign-enum uv_req_type", output);
  fprintf(output, "\n  (:UV_UNKNOWN_REQ %d)", UV_UNKNOWN_REQ);
  UV_REQ_TYPE_MAP(XX);
  fprintf(output, "\n  (:UV_REQ_TYPE_MAX %d)", UV_REQ_TYPE_MAX);

@@ -111,7 +111,7 @@
   :returning :int)
 
 ;;; Poll handle
-(defcenum uv_poll_event
+(def-foreign-enum uv_poll_event
   (:UV_READABLE    1)
   (:UV_WRITABLE    2)
   (:UV_DISCONNECT  4)
@@ -144,7 +144,7 @@
   :returning :int)
 
 ;;; Process handle
-(defcenum uv_process_flags
+(def-foreign-enum uv_process_flags
   (:UV_PROCESS_SETUID                     #.(ash 1 0))
   (:UV_PROCESS_SETGID                     #.(ash 1 1))
   (:UV_PROCESS_WINDOWS_VERBATIM_ARGUMENTS #.(ash 1 2))
@@ -153,7 +153,7 @@
   (:UV_PROCESS_WINDOWS_HIDE_CONSOLE       #.(ash 1 5))
   (:UV_PROCESS_WINDOWS_HIDE_GUI           #.(ash 1 6)))
 
-(defcenum uv_stdio_flags
+(def-foreign-enum uv_stdio_flags
   (:UV_IGNORE         #x00)
   (:UV_CREATE_PIPE    #x01)
   (:UV_INHERIT_FD     #x02)
@@ -250,12 +250,16 @@
 (def-foreign-call uv_stream_get_write_queue_size ((stream (* uv_stream_t)))
   :returning size_t)
 
+;;; TCP handle
+(def-foreign-call uv_tcp_init ((event-loop (* uv_loop_t)) (handle (* uv_tcp_t)))
+  :returning :int)
+
 ;;; FS Event handle
-(defcenum uv_fs_event
+(def-foreign-enum uv_fs_event
   (:UV_RENAME 1)
   (:UV_CHANGE 2))
 
-(defcenum uv_fs_event_flags
+(def-foreign-enum uv_fs_event_flags
   (:UV_FS_EVENT_WATCH_ENTRY 1)
   (:UV_FS_EVENT_STAT        2)
   (:UV_FS_EVENT_RECURSIVE   4))

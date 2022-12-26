@@ -1,11 +1,11 @@
 ;;;; event-loop.cl
 (in-package #:libuv)
 
-(defcenum uv_loop_option
+(def-foreign-enum uv_loop_option
   (:UV_LOOP_BLOCK_SIGNAL 0)
   (:UV_METRICS_IDLE_TIME 1))
 
-(defcenum uv_run_mode
+(def-foreign-enum uv_run_mode
   (:UV_RUN_DEFAULT 0)
   (:UV_RUN_ONCE 1)
   (:UV_RUN_NOWAIT 2))
