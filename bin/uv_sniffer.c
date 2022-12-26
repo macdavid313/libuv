@@ -51,8 +51,19 @@ int main(int argc, char** argv) {
   fputs(")\n", output);
   fputs("\n\n", output);
 
-  fputs(";;; uv_lib_t\n", output);
+  fputs(";;; Shared library handling\n", output);
   fprintf(output, "(def-foreign-type uv_lib_t (:array :unsigned-char %lu))\n", sizeof(uv_lib_t));
+  fputs("\n\n", output);
+
+  fputs(";;; Threading and synchronization utilities\n", output);
+  fprintf(output, "(def-foreign-type uv_thread_t (:array :unsigned-char %lu))\n", sizeof(uv_thread_t));
+  fprintf(output, "(def-foreign-type uv_key_t (:array :unsigned-char %lu))\n", sizeof(uv_key_t));
+  fprintf(output, "(def-foreign-type uv_once_t (:array :unsigned-char %lu))\n", sizeof(uv_once_t));
+  fprintf(output, "(def-foreign-type uv_mutex_t (:array :unsigned-char %lu))\n", sizeof(uv_mutex_t));
+  fprintf(output, "(def-foreign-type uv_rwlock_t (:array :unsigned-char %lu))\n", sizeof(uv_rwlock_t));
+  fprintf(output, "(def-foreign-type uv_sem_t (:array :unsigned-char %lu))\n", sizeof(uv_sem_t));
+  fprintf(output, "(def-foreign-type uv_cond_t (:array :unsigned-char %lu))\n", sizeof(uv_cond_t));
+  fprintf(output, "(def-foreign-type uv_barrier_t (:array :unsigned-char %lu))\n", sizeof(uv_barrier_t));
   fputs("\n\n", output);
 
   fputs(";;; Error constants\n", output);

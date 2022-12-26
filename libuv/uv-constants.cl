@@ -14,8 +14,19 @@
 (def-foreign-type uv_gid_t :unsigned-int)
 
 
-;;; uv_lib_t
+;;; Shared library handling
 (def-foreign-type uv_lib_t (:array :unsigned-char 16))
+
+
+;;; Threading and synchronization utilities
+(def-foreign-type uv_thread_t (:array :unsigned-char 8))
+(def-foreign-type uv_key_t (:array :unsigned-char 4))
+(def-foreign-type uv_once_t (:array :unsigned-char 4))
+(def-foreign-type uv_mutex_t (:array :unsigned-char 40))
+(def-foreign-type uv_rwlock_t (:array :unsigned-char 56))
+(def-foreign-type uv_sem_t (:array :unsigned-char 32))
+(def-foreign-type uv_cond_t (:array :unsigned-char 48))
+(def-foreign-type uv_barrier_t (:array :unsigned-char 32))
 
 
 ;;; Error constants
