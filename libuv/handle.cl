@@ -291,6 +291,41 @@
                                  (flags1 :int))
   :returning :int)
 
+;;; Pipe handle
+(def-foreign-call uv_pipe_init ((event-loop (* uv_loop_t)) (handle (* uv_pipe_t)) (ipc :int))
+  :returning :int)
+
+(def-foreign-call uv_pipe_open ((handle (* uv_pipe_t)) (file uv_file))
+  :returning :int)
+
+(def-foreign-call uv_pipe_bind ((handle (* uv_pipe_t)) (name (* :char)))
+  :returning :int
+  :strings-convert t)
+
+(def-foreign-call uv_pipe_connect ((req (* uv_connect_t)) (handle (* uv_pipe_t)) (name (* :char)) (cb :foreign-address))
+  :returning :void)
+
+(def-foreign-call uv_pipe_getsockname ((handle (* uv_pipe_t)) (buffer (* :char)) (size (* size_t)))
+  :returning :int
+  :strings-convert nil)
+
+(def-foreign-call uv_pipe_getpeername ((handle (* uv_pipe_t)) (buffer (* :char)) (size (* size_t)))
+  :returning :int
+  :strings-convert nil)
+
+#+windows
+(def-foreign-call uv_pipe_pending_instances ((handle (* uv_pipe_t)) (count :int))
+  :returning :void)
+
+(def-foreign-call uv_pipe_pending_count ((handle (* uv_pipe_t)))
+  :returning :int)
+
+(def-foreign-call uv_pipe_chmod ((handle (* uv_pipe_t)) (flags :int))
+  :returning :int)
+
+(def-foreign-call uv_pipe ((fds (:array uv_file 2)) (read_flags :int) (write_flags :int))
+  :returning :int)
+
 ;;; FS Event handle
 (def-foreign-enum uv_fs_event
   (:UV_RENAME 1)
