@@ -326,6 +326,38 @@
 (def-foreign-call uv_pipe ((fds (:array uv_file 2)) (read_flags :int) (write_flags :int))
   :returning :int)
 
+;;; TTY handle
+(def-foreign-enum uv_tty_mode_t
+  (:UV_TTY_MODE_NORMAL 0)               ; Initial/normal terminal mode
+  (:UV_TTY_MODE_RAW    1) ; Raw input mode (On Windows, ENABLE_WINDOW_INPUT is also enabled)
+  (:UV_TTY_MODE_IO     2) ; Binary-safe I/O mode for IPC (Unix-only)
+  )
+
+(def-foreign-enum uv_tty_vtermstate_t
+  ;; The console supports handling of virtual terminal sequences
+  ;; (Windows10 new console, ConEmu)
+  (:UV_TTY_SUPPORTED 0)
+  ;; The console cannot process virtual terminal sequences.  (Legacy console)
+  (:UV_TTY_UNSUPPORTED 1))
+
+(defun uv_tty_init ((event-loop (* uv_loop_t)) (handle (* uv_tty_t)) (fd uv_file) (unused :int))
+  :returning :int)
+
+(def-foreign-call uv_tty_set_mode ((handle (* uv_tty_t)) (mode uv_tty_mode_t))
+  :returning :int)
+
+(def-foreign-call uv_tty_reset_mode (:void)
+  :returning :int)
+
+(def-foreign-call uv_tty_get_winsize ((handle (* uv_tty_t)) (width (* :int)) (height (* :int)))
+  :returning :int)
+
+(def-foreign-call uv_tty_set_vterm_state ((state uv_tty_vtermstate_t))
+  :returning :int)
+
+(def-foreign-call uv_tty_get_vterm_state ((state (* uv_tty_vtermstate_t)))
+  :returning :int)
+
 ;;; FS Event handle
 (def-foreign-enum uv_fs_event
   (:UV_RENAME 1)
