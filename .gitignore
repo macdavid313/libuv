@@ -16,4 +16,4 @@
 *.wx64fsl
 *.wx32fsl
 
-uv_sniffer
+tool/uv-pickaxe
