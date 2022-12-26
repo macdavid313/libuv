@@ -257,7 +257,7 @@
 (def-foreign-call uv_tcp_init_ex ((event-loop (* uv_loop_t)) (handle (* uv_tcp_t)) (flags :unsigned-int))
   :returning :int)
 
-(def-foreign-call uv_tcp_open ((handle (* uv_tcp_t)) (sock (* uv_os_sock_t)))
+(def-foreign-call uv_tcp_open ((handle (* uv_tcp_t)) (sock uv_os_sock_t))
   :returning :int)
 
 (def-foreign-call uv_tcp_nodelay ((handle (* uv_tcp_t)) (enable :int))
@@ -357,6 +357,98 @@
 
 (def-foreign-call uv_tty_get_vterm_state ((state (* uv_tty_vtermstate_t)))
   :returning :int)
+
+;;; UDP handle
+(def-foreign-enum uv_udp_flags
+  (:UV_UDP_IPV6ONLY      1)
+  (:UV_UDP_PARTIAL       2)
+  (:UV_UDP_REUSEADDR     4)
+  (:UV_UDP_MMSG_CHUNK    8)
+  (:UV_UDP_MMSG_FREE     16)
+  (:UV_UDP_LINUX_RECVERR 32)
+  (:UV_UDP_RECVMMSG      256))
+
+(def-foreign-enum uv_membership
+  (:UV_LEAVE_GROUP 0)
+  (:UV_JOIN_GROUP  1))
+
+(def-foreign-call uv_udp_init ((event-loop (* uv_loop_t)) (handle (* uv_udp_t)))
+  :returning :int)
+
+(def-foreign-call uv_udp_init_ex ((event-loop (* uv_loop_t)) (handle (* uv_udp_t)) (flags :unsigned-int))
+  :returning :int)
+
+(def-foreign-call uv_udp_open ((handle (* uv_udp_t)) (sock uv_os_sock_t))
+  :returning :int)
+
+(def-foreign-call uv_udp_bind ((handle (* uv_udp_t)) (addr (* sockaddr)) (flags :unsigned-int))
+  :returning :int)
+
+(def-foreign-call uv_udp_connect ((handle (* uv_udp_t)) (addr (* sockaddr)))
+  :returning :int)
+
+(def-foreign-call uv_udp_getpeername ((handle (* uv_udp_t)) (name (* sockaddr)) (namelen (* :int)))
+  :returning :int)
+
+(def-foreign-call uv_udp_getsockname ((handle (* uv_udp_t)) (name (* sockaddr)) (namelen (* :int)))
+  :returning :int)
+
+(def-foreign-call uv_udp_set_membership ((handle (* uv_udp_t)) (multicast_addr (* :char)) (interface_addr (* :char)) (membership uv_membership))
+  :returning :int
+  :strings-convert t)
+
+(def-foreign-call uv_udp_set_source_membership ((handle (* uv_udp_t))
+                                                (multicast_addr (* :char))
+                                                (interface_addr (* :char))
+                                                (source_addr (* :char))
+                                                (membership uv_membership))
+  :returning :int
+  :strings-convert t)
+
+(def-foreign-call uv_udp_set_multicast_loop ((handle (* uv_udp_t)) (on :int))
+  :returning :int)
+
+(def-foreign-call uv_udp_set_multicast_ttl ((handle (* uv_udp_t)) (ttl :int))
+  :returning :int)
+
+(def-foreign-call uv_udp_set_multicast_interface ((handle (* uv_udp_t)) (interface_addr (* :char)))
+  :returning :int
+  :strings-convert t)
+
+(def-foreign-call uv_udp_set_broadcast ((handle (* uv_udp_t)) (on :int))
+  :returning :int)
+
+(def-foreign-call uv_udp_set_ttl ((handle (* uv_udp_t)) (ttl :int))
+  :returning :int)
+
+(def-foreign-call uv_udp_send ((req (* uv_udp_send_t))
+                               (handle (* uv_udp_t))
+                               (bufs (:array uv_buf_t))
+                               (nbufs :unsigned-int)
+                               (addr (* sockaddr))
+                               (send_cb :foreign-address))
+  :returning :int)
+
+(def-foreign-call uv_udp_try_send ((handle (* uv_udp_t))
+                                   (bufs (:array uv_buf_t))
+                                   (nbufs :unsigned-int)
+                                   (addr (* sockaddr)))
+  :returning :int)
+
+(def-foreign-call uv_udp_recv_start ((handle (* uv_udp_t)) (alloc_cb :foreign-address) (recv_cb :foreign-address))
+  :returning :int)
+
+(def-foreign-call uv_udp_using_recvmmsg ((handle (* uv_udp_t)))
+  :returning :int)
+
+(def-foreign-call uv_udp_recv_stop ((handle (* uv_udp_t)))
+  :returning :int)
+
+(def-foreign-call uv_udp_get_send_queue_size ((handle (* uv_udp_t)))
+  :returning size_t)
+
+(def-foreign-call uv_udp_get_send_queue_count ((handle (* uv_udp_t)))
+  :returning size_t)
 
 ;;; FS Event handle
 (def-foreign-enum uv_fs_event
