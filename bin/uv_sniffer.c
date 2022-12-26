@@ -51,6 +51,10 @@ int main(int argc, char** argv) {
   fputs(")\n", output);
   fputs("\n\n", output);
 
+  fputs(";;; uv_lib_t\n", output);
+  fprintf(output, "(def-foreign-type uv_lib_t (:array :unsigned-char %lu))\n", sizeof(uv_lib_t));
+  fputs("\n\n", output);
+
   fputs(";;; Error constants\n", output);
   fputs(";;; http://docs.libuv.org/en/v1.x/errors.html#error-constants\n", output);
 #define XX(name, _) fprintf(output, "\n  (:UV_%s %d)", #name, UV_##name);

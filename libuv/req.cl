@@ -47,3 +47,22 @@
                                   (addr (* sockaddr))
                                   (flags :int))
   :returning :int)
+
+
+;;; Shared library handling
+(def-foreign-call uv_dlopen ((filename (* :char)) (lib (* uv_lib_t)))
+  :returning :int
+  :strings-convert t)
+
+(def-foreign-call uv_dlclose ((lib (* uv_lib_t)))
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_dlsym ((lib (* uv_lib_t)) (name (* :char)) (ptr (:array (* :void))))
+  :returning :int
+  :strings-convert t)
+
+(def-foreign-call uv_dlerror ((lib (* uv_lib_t)))
+  :returning ((* :char))
+  :strings-convert t)

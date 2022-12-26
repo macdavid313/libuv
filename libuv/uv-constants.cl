@@ -14,6 +14,10 @@
 (def-foreign-type uv_gid_t :unsigned-int)
 
 
+;;; uv_lib_t
+(def-foreign-type uv_lib_t (:array :unsigned-char 16))
+
+
 ;;; Error constants
 ;;; http://docs.libuv.org/en/v1.x/errors.html#error-constants
 (def-foreign-enum uv_error_t
