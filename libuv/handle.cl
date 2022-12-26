@@ -254,6 +254,43 @@
 (def-foreign-call uv_tcp_init ((event-loop (* uv_loop_t)) (handle (* uv_tcp_t)))
   :returning :int)
 
+(def-foreign-call uv_tcp_init_ex ((event-loop (* uv_loop_t)) (handle (* uv_tcp_t)) (flags :unsigned-int))
+  :returning :int)
+
+(def-foreign-call uv_tcp_open ((handle (* uv_tcp_t)) (sock (* uv_os_sock_t)))
+  :returning :int)
+
+(def-foreign-call uv_tcp_nodelay ((handle (* uv_tcp_t)) (enable :int))
+  :returning :int)
+
+(def-foreign-call uv_tcp_keepalive ((handle (* uv_tcp_t)) (enable :int) (delay :unsigned-int))
+  :returning :int)
+
+(def-foreign-call uv_tcp_simultaneous_accepts ((handle (* uv_tcp_t)) (enable :int))
+  :returning :int)
+
+(def-foreign-call uv_tcp_bind ((handle (* uv_tcp_t)) (addr (* sockaddr)) (flags :unsigned-int))
+  :returning :int)
+
+(def-foreign-call uv_tcp_getsockname ((handle (* uv_tcp_t)) (name (* sockaddr)) (namelen (* :int)))
+  :returning :int)
+
+(def-foreign-call uv_tcp_getpeername ((handle (* uv_tcp_t)) (name (* sockaddr)) (namelen (* :int)))
+  :returning :int)
+
+(def-foreign-call uv_tcp_connect ((handle (* uv_tcp_t)) (addr (* sockaddr)) (cb :foreign-address))
+  :returning :int)
+
+(def-foreign-call uv_tcp_close_reset ((handle (* uv_tcp_t)) (cb :foreign-address))
+  :returning :int)
+
+(def-foreign-call uv_socketpair ((type :int)
+                                 (protocol :int)
+                                 (socket_vector (:array uv_os_sock_t 2))
+                                 (flags0 :int)
+                                 (flags1 :int))
+  :returning :int)
+
 ;;; FS Event handle
 (def-foreign-enum uv_fs_event
   (:UV_RENAME 1)
