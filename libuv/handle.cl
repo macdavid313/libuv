@@ -303,7 +303,8 @@
   :strings-convert t)
 
 (def-foreign-call uv_pipe_connect ((req (* uv_connect_t)) (handle (* uv_pipe_t)) (name (* :char)) (cb :foreign-address))
-  :returning :void)
+  :returning :void
+  :strings-convert t)
 
 (def-foreign-call uv_pipe_getsockname ((handle (* uv_pipe_t)) (buffer (* :char)) (size (* size_t)))
   :returning :int
@@ -340,7 +341,7 @@
   ;; The console cannot process virtual terminal sequences.  (Legacy console)
   (:UV_TTY_UNSUPPORTED 1))
 
-(defun uv_tty_init ((event-loop (* uv_loop_t)) (handle (* uv_tty_t)) (fd uv_file) (unused :int))
+(def-foreign-call uv_tty_init ((event-loop (* uv_loop_t)) (handle (* uv_tty_t)) (fd uv_file) (unused :int))
   :returning :int)
 
 (def-foreign-call uv_tty_set_mode ((handle (* uv_tty_t)) (mode uv_tty_mode_t))

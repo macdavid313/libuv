@@ -21,6 +21,13 @@
 (def-foreign-call uv_req_size ((type uv_req_type fixnum))
   :returning size_t)
 
+;;; Thread pool work scheduling¶
+(def-foreign-call uv_queue_work ((event-loop (* uv_loop_t))
+                                 (req (* uv_work_t))
+                                 (work_cb :foreign-address)
+                                 (after_work_cb :foreign-address))
+  :returning :int)
+
 ;;; DNS utility functions
 (def-foreign-call uv_getaddrinfo ((event-loop (* uv_loop_t))
                                   (req (* uv_getaddrinfo_t))
