@@ -26,7 +26,14 @@ cmake --build .
 cmake --install .
 
 cd /usr/local/src
-cc -o uv-pickaxe \
+
+if [ "$BUILD_TARGET" == "x86_64-unknown-linux-gnu" ]; then
+    CC=cc
+else
+    CC=${CROSS_TOOLCHAIN_PREFIX}gcc
+fi
+
+${CC} -o uv-pickaxe \
     -I/usr/local/libuv/include \
     -luv -L/usr/local/libuv/lib \
     uv-pickaxe.c
