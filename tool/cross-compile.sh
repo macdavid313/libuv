@@ -24,21 +24,3 @@ fi
 cmake ../ ${CMAKE_COMMON_VARS} ${CMAKE_EXTRA_VARS}
 cmake --build .
 cmake --install .
-
-cd /usr/local/src
-
-if [ "$BUILD_TARGET" == "x86_64-unknown-linux-gnu" ]; then
-    CC=cc
-else
-    CC=${CROSS_TOOLCHAIN_PREFIX}gcc
-fi
-
-${CC} -o uv-pickaxe \
-    -I/usr/local/libuv/include \
-    -luv -L/usr/local/libuv/lib \
-    uv-pickaxe.c
-
-env LD_LIBRARY_PATH=/usr/local/libuv/lib \
-    ./uv-pickaxe > /usr/local/libuv/share/uv-constants.cl
-
-echo "All done."
