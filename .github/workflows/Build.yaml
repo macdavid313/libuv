@@ -1,0 +1,112 @@
+name: Build and publish libuv artifacts
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-20.04
+            target: i686-unknown-linux-gnu
+
+          - os: ubuntu-20.04
+            target: x86_64-unknown-linux-gnu
+
+          # - os: ubuntu-20.04
+          #   target: aarch64-unknown-linux-gnu
+
+          # - os: ubuntu-20.04
+          #   target: i686-unknown-freebsd
+
+          # - os: ubuntu-20.04
+          #   target: x86_64-unknown-freebsd
+
+          # - os: ubuntu-20.04
+          #   target: sparcv9-sun-solaris
+
+          # - os: ubuntu-20.04
+          #   target: x86_64-sun-solaris
+
+          - os: macos-12
+            target: aarch64-apple-darwin
+
+          - os: macos-12
+            target: x86_64-apple-darwin
+
+          # - os: windows-2022
+          #   target: i686-pc-windows-msvc
+
+          # - os: windows-2022
+          #   target: x86_64-pc-windows-msvc
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      LIBUV_VERSION: 1.44.2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        if: matrix.os == 'ubuntu-20.04'
+        uses: docker/setup-qemu-action@v2
+
+      - name: Download libuv source code
+        run: |
+          curl -L https://github.com/libuv/libuv/archive/refs/tags/v${LIBUV_VERSION}.tar.gz | tar xz
+        shell: bash
+
+      - name: Build and install libuv (through docker)
+        if: matrix.os == 'ubuntu-20.04'
+        run: |
+          set -euxo pipefail
+          mkdir libuv-dist
+          IMAGE_REGISTRY=ghcr.io/cross-rs
+          case ${{ matrix.target }} in
+            x86_64-unknown-linux-gnu | aarch64-unknown-linux-gnu)
+              IMAGE_TAG=main-centos
+              ;;
+            *)
+              IMAGE_TAG=main
+              ;;
+          esac
+          BASE_IMAGE=${IMAGE_REGISTRY}/${{ matrix.target }}:${IMAGE_TAG}
+          docker pull --quiet ${BASE_IMAGE}
+          docker build -t libuv-builder -f tool/Dockerfile.build \
+            --build-arg base_image=${BASE_IMAGE} \
+            tool/
+          docker run --rm --env BUILD_TARGET=${{ matrix.target }} \
+            -v $(pwd)/libuv-${LIBUV_VERSION}:/usr/local/src/libuv \
+            -v $(pwd)/libuv-dist:/usr/local/libuv \
+            libuv-builder
+        shell: bash
+
+      - name: Build and install libuv (for macOS)
+        if: matrix.os == 'macos-12'
+        run: |
+          mkdir -p libuv-${LIBUV_VERSION}/build
+          cd libuv-${LIBUV_VERSION}/build
+          if [ "${{ matrix.target }}" == "aarch64-apple-darwin" ]; then
+            CMAKE_OSX_ARCHITECTURES=arm64
+          else
+            CMAKE_OSX_ARCHITECTURES=x86_64
+          fi
+          cmake ../ -DBUILD_TESTING=OFF \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=../../libuv-dist \
+            -DBUILD_SHARED_LIBS=ON \
+            -DCMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES}
+          cmake --build .
+          echo $(ls -lh *uv.*)
+          cmake --install .
+        shell: bash
+
+      - name: Publish artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.target }}
+          path: libuv-dist

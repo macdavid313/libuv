@@ -1,0 +1,11 @@
+ARG base_image
+FROM ${base_image}
+LABEL maintainer="Tianyu Gu <gty@franz.com>"
+
+VOLUME /usr/local/src/libuv
+VOLUME /usr/local/libuv
+
+COPY cross-compile.sh /usr/local/bin/cross-compile.sh
+COPY uv-pickaxe.c /usr/local/src/uv-pickaxe.c
+
+CMD ["cross-compile.sh"]
