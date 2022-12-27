@@ -117,4 +117,6 @@ int main(int argc, char** argv) {
   fputs(")\n", output);
   fprintf(output, "(defconstant +UV_IF_NAMESIZE+ %d)\n", UV_IF_NAMESIZE);
   fprintf(output, "(defconstant +UV_MAXHOSTNAMESIZE+ %d)\n", UV_MAXHOSTNAMESIZE);
+
+  return 0;
 }
