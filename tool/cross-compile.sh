@@ -6,6 +6,12 @@ cd /usr/local/src/libuv
 mkdir -p build
 cd build
 
+CMAKE_COMMON_VARS="-DBUILD_TESTING=OFF \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr/local/libuv \
+    -DBUILD_SHARED_LIBS=ON \
+    -DCMAKE_INSTALL_LIBDIR=lib"
+
 if [ "$BUILD_TARGET" == "x86_64-unknown-linux-gnu" ]; then
     CMAKE_EXTRA_VARS=
 else
@@ -15,13 +21,7 @@ else
         -DCMAKE_TOOLCHAIN_FILE=/opt/toolchain.cmake"
 fi
 
-cmake ../ -DBUILD_TESTING=OFF \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr/local/libuv \
-    -DBUILD_SHARED_LIBS=ON \
-    -DCMAKE_INSTALL_LIBDIR=lib \
-    ${CMAKE_EXTRA_VARS}
-
+cmake ../ ${CMAKE_COMMON_VARS} ${CMAKE_EXTRA_VARS}
 cmake --build .
 cmake --install .
 
