@@ -30,11 +30,11 @@ jobs:
           - os: ubuntu-20.04
             target: x86_64-pc-windows-gnu
 
-          # - os: ubuntu-20.04
-          #   target: sparcv9-sun-solaris
+          - os: ubuntu-20.04
+            target: sparcv9-sun-solaris
 
-          # - os: ubuntu-20.04
-          #   target: x86_64-sun-solaris
+          - os: ubuntu-20.04
+            target: x86_64-sun-solaris
 
           - os: macos-12
             target: aarch64-apple-darwin
