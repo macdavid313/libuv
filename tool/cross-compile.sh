@@ -24,12 +24,12 @@ cmake ../ -DBUILD_TESTING=OFF \
 cmake --build .
 cmake --install .
 
-cd /usr/local/src
-cc -o uv-pickaxe \
-    -I/usr/local/libuv/include \
-    -luv -L/usr/local/libuv/lib -L/usr/local/libuv/lib64 \
-    uv-pickaxe.c
+# cd /usr/local/src
+# cc -o uv-pickaxe \
+#     -I/usr/local/libuv/include \
+#     -luv -L/usr/local/libuv/lib -L/usr/local/libuv/lib64 \
+#     uv-pickaxe.c
 
-[ -z ${LD_LIBRARY_PATH+x} ] && export LD_LIBRARY_PATH=
-export LD_LIBRARY_PATH=/usr/local/libuv/lib:/usr/local/libuv/lib64:$LD_LIBRARY_PATH
-./uv-pickaxe > /usr/local/libuv/share/uv-constants.cl
+# [ -z ${LD_LIBRARY_PATH+x} ] && export LD_LIBRARY_PATH=
+# export LD_LIBRARY_PATH=/usr/local/libuv/lib:/usr/local/libuv/lib64:$LD_LIBRARY_PATH
+# ./uv-pickaxe > /usr/local/libuv/share/uv-constants.cl
