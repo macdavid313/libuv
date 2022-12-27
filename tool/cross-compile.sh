@@ -19,17 +19,19 @@ cmake ../ -DBUILD_TESTING=OFF \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr/local/libuv \
     -DBUILD_SHARED_LIBS=ON \
+    -DCMAKE_INSTALL_LIBDIR=lib \
     ${CMAKE_EXTRA_VARS}
 
 cmake --build .
 cmake --install .
 
-# cd /usr/local/src
-# cc -o uv-pickaxe \
-#     -I/usr/local/libuv/include \
-#     -luv -L/usr/local/libuv/lib -L/usr/local/libuv/lib64 \
-#     uv-pickaxe.c
+cd /usr/local/src
+cc -o uv-pickaxe \
+    -I/usr/local/libuv/include \
+    -luv -L/usr/local/libuv/lib \
+    uv-pickaxe.c
 
-# [ -z ${LD_LIBRARY_PATH+x} ] && export LD_LIBRARY_PATH=
-# export LD_LIBRARY_PATH=/usr/local/libuv/lib:/usr/local/libuv/lib64:$LD_LIBRARY_PATH
-# ./uv-pickaxe > /usr/local/libuv/share/uv-constants.cl
+env LD_LIBRARY_PATH=/usr/local/libuv/lib \
+    ./uv-pickaxe > /usr/local/libuv/share/uv-constants.cl
+
+echo "All done."
