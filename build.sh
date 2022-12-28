@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# 1. build libuv
+set -euxo pipefail
 
 # 2. uv-pickaxe
 clang -o tool/uv-pickaxe -I$HOME/.local/include -luv -L$HOME/.local/lib tool/uv-pickaxe.c
