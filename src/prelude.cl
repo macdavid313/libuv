@@ -55,11 +55,24 @@
      (ai_canonname (* :void))
      (ai_next (* addrinfo))))
 
+;;; uv buffer
+;;; suggested size (len): 65536
 (def-foreign-type uv_buf_t
     (:struct
      (base (* :char))
-     (len #+windows :unisgned-long
+     (len #+windows :unsigned-long
           #-windows size_t)))
+
+(defun uv_buf_init (len)
+  (let ((buf (allocate-fobject 'uv_buf_t :c)))
+    (setf (fslot-value-typed 'uv_buf_t :c buf 'len) len)
+    (setf (fslot-value-typed 'uv_buf_t :c buf 'base)
+          (allocate-fobject :char :c len))
+    buf))
+
+(defun uv_buf_free (buf)
+  (free-fobject (fslot-value-typed 'uv_buf_t :c buf 'base))
+  (free-fobject buf))
 
 ;;; C enums
 (eval-when (:compile-toplevel :load-toplevel :execute)
