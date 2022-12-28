@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
   fprintf(output, "\n  (:UV_HANDLE_TYPE_MAX %d)", UV_HANDLE_TYPE_MAX);
   fputs(")\n", output);
 #undef XX
-#define XX(name, type) fprintf(output, "(def-foreign-type uv_%s_t (:array :unsigned-char %lu))\n", #type, uv_handle_size(UV_##name));
+#define XX(name, type) fprintf(output, "(def-foreign-type uv_%s_t (:array :unsigned-char %zu))\n", #type, uv_handle_size(UV_##name));
   UV_HANDLE_TYPE_MAP(XX);
 #undef XX
   fputs("\n\n", output);
@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
   fprintf(output, "\n  (:UV_REQ_TYPE_MAX %d)", UV_REQ_TYPE_MAX);
   fputs(")\n", output);
 #undef XX
-#define XX(name, type) fprintf(output, "(def-foreign-type uv_%s_t (:array :unsigned-char %lu))\n", #type, uv_req_size(UV_##name));
+#define XX(name, type) fprintf(output, "(def-foreign-type uv_%s_t (:array :unsigned-char %zu))\n", #type, uv_req_size(UV_##name));
   UV_REQ_TYPE_MAP(XX);
 #undef XX
   fputs("\n\n", output);
@@ -81,22 +81,22 @@ int main(int argc, char** argv) {
   fprintf(output, "(defconstant +UV_VERSION_HEX+ %d)\n\n\n", UV_VERSION_HEX);
 
   fputs(";;; Shared library handling\n", output);
-  fprintf(output, "(def-foreign-type uv_lib_t (:array :unsigned-char %lu))\n", sizeof(uv_lib_t));
+  fprintf(output, "(def-foreign-type uv_lib_t (:array :unsigned-char %zu))\n", sizeof(uv_lib_t));
   fputs("\n\n", output);
 
   fputs(";;; Threading and synchronization utilities\n", output);
-  fprintf(output, "(def-foreign-type uv_thread_t (:array :unsigned-char %lu))\n", sizeof(uv_thread_t));
-  fprintf(output, "(def-foreign-type uv_key_t (:array :unsigned-char %lu))\n", sizeof(uv_key_t));
-  fprintf(output, "(def-foreign-type uv_once_t (:array :unsigned-char %lu))\n", sizeof(uv_once_t));
-  fprintf(output, "(def-foreign-type uv_mutex_t (:array :unsigned-char %lu))\n", sizeof(uv_mutex_t));
-  fprintf(output, "(def-foreign-type uv_rwlock_t (:array :unsigned-char %lu))\n", sizeof(uv_rwlock_t));
-  fprintf(output, "(def-foreign-type uv_sem_t (:array :unsigned-char %lu))\n", sizeof(uv_sem_t));
-  fprintf(output, "(def-foreign-type uv_cond_t (:array :unsigned-char %lu))\n", sizeof(uv_cond_t));
-  fprintf(output, "(def-foreign-type uv_barrier_t (:array :unsigned-char %lu))\n", sizeof(uv_barrier_t));
+  fprintf(output, "(def-foreign-type uv_thread_t (:array :unsigned-char %zu))\n", sizeof(uv_thread_t));
+  fprintf(output, "(def-foreign-type uv_key_t (:array :unsigned-char %zu))\n", sizeof(uv_key_t));
+  fprintf(output, "(def-foreign-type uv_once_t (:array :unsigned-char %zu))\n", sizeof(uv_once_t));
+  fprintf(output, "(def-foreign-type uv_mutex_t (:array :unsigned-char %zu))\n", sizeof(uv_mutex_t));
+  fprintf(output, "(def-foreign-type uv_rwlock_t (:array :unsigned-char %zu))\n", sizeof(uv_rwlock_t));
+  fprintf(output, "(def-foreign-type uv_sem_t (:array :unsigned-char %zu))\n", sizeof(uv_sem_t));
+  fprintf(output, "(def-foreign-type uv_cond_t (:array :unsigned-char %zu))\n", sizeof(uv_cond_t));
+  fprintf(output, "(def-foreign-type uv_barrier_t (:array :unsigned-char %zu))\n", sizeof(uv_barrier_t));
   fputs("\n\n", output);
 
   fputs(";;; Types and other constants\n", output);
-  fprintf(output, "(def-foreign-type uv_loop_t (:array :unsigned-char %lu))\n", uv_loop_size());
+  fprintf(output, "(def-foreign-type uv_loop_t (:array :unsigned-char %zu))\n", uv_loop_size());
   fputs("(def-foreign-type uv_uid_t ", output);
   type_name(output, TYPE_SIGNED_P(uv_uid_t), sizeof(uv_uid_t));
   fputs(")\n", output);
