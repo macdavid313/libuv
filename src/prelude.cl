@@ -16,33 +16,33 @@
 (def-foreign-type int64_t  :long-long)
 
 ;;; socket struct
-(def-foreign-type in_addr
-    (:struct
-     (s-addr :unsigned-long)))
+;; (def-foreign-type in_addr
+;;     (:struct
+;;      (s-addr :unsigned-long)))
 
-(def-foreign-type in6_addr
-    (:struct
-     (s6-addr (:array :unsigned-char 16))))
+;; (def-foreign-type in6_addr
+;;     (:struct
+;;      (s6-addr (:array :unsigned-char 16))))
 
-(def-foreign-type sockaddr
-    (:struct
-     (sa_family :unsigned-short)
-     (sa_data (:array :char 14))))
+;; (def-foreign-type sockaddr
+;;     (:struct
+;;      (sa_family :unsigned-short)
+;;      (sa_data (:array :char 14))))
 
-(def-foreign-type sockaddr_in
-    (:struct
-     (sin_family :short)
-     (sin_addr :unsigned-short)
-     (sin_addr in_addr)
-     (sin_zero (:array :char 8))))
+;; (def-foreign-type sockaddr_in
+;;     (:struct
+;;      (sin_family :short)
+;;      (sin_addr :unsigned-short)
+;;      (sin_addr in_addr)
+;;      (sin_zero (:array :char 8))))
 
-(def-foreign-type sockaddr_in6
-    (:struct
-     (sin6_family :unsigned-short)
-     (sin6_port :unsigned-short)
-     (sin6_flowinfo :unsigned-int)
-     (sin6_addr in6_addr)
-     (sin6_scope_id :unsigned-int)))
+;; (def-foreign-type sockaddr_in6
+;;     (:struct
+;;      (sin6_family :unsigned-short)
+;;      (sin6_port :unsigned-short)
+;;      (sin6_flowinfo :unsigned-int)
+;;      (sin6_addr in6_addr)
+;;      (sin6_scope_id :unsigned-int)))
 
 (def-foreign-type addrinfo
     (:struct
@@ -51,8 +51,13 @@
      (ai_socktype :int)
      (ai_protocol :int)
      (ai_addrlen size_t)
-     (ai_addr (* :void))
-     (ai_canonname (* :void))
+
+     #+windows (ai_canonname (* :char))
+     #-windows (ai_addr (* soackaddr))
+
+     #+windows (ai_addr (* sockaddr))
+     #-windows (ai_canonname (* :char))
+
      (ai_next (* addrinfo))))
 
 ;;; uv buffer
