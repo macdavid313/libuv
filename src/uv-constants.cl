@@ -195,3 +195,4 @@
 (def-foreign-type uv_pid_t :int)
 (defconstant +UV_IF_NAMESIZE+ 17)
 (defconstant +UV_MAXHOSTNAMESIZE+ 65)
+(defconstant +UV_EOF+ -4095)
