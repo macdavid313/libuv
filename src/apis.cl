@@ -87,7 +87,7 @@
 (def-foreign-call uv_is_closing ((handle (* uv_handle_t)))
   :returning :int)
 
-(def-foreign-call uv_close ((handle (* uv_handle_t)))
+(def-foreign-call uv_close ((handle (* uv_handle_t)) (close_cb :foreign-address))
   :returning :void)
 
 (def-foreign-call uv_ref ((handle (* uv_handle_t)))
