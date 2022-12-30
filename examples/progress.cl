@@ -1,0 +1,45 @@
+;;;; progress.cl
+(in-package #:cl-user)
+
+(eval-when (:load-toplevel :execute)
+  (defparameter *event-loop* (libuv:uv_default_loop))
+  (defparameter *async* (ff:allocate-fobject 'libuv:uv_async_t))
+  (defparameter *percentage* (ff:allocate-fobject :double :c)))
+
+(ff:defun-foreign-callable fake-download ((req (* libuv:uv_work_t)))
+  (declare (special *percentage*))
+  (let ((size (ff:fslot-value-typed :int :c (libuv:uv_req_get_data req)))
+        (downloaded 0))
+    (while (< downloaded size)
+      (setf (ff:fslot-value-typed :double :c *percentage*) (/ (* downloaded 100d0) size))
+      (libuv:uv_handle_set_data *async* *percentage*)
+      (libuv:uv_async_send *async*)
+
+      (sleep 1)
+      (incf downloaded (mod (+ 200 (random #.(* 16 (1- (expt 2 31))))) 1000)))))
+
+(ff:defun-foreign-callable after ((req (* libuv:uv_work_t)) (status :int))
+  (declare (ignore req status))
+  (format t "Download complete~%")
+  (force-output)
+  (libuv:uv_close *async* 0))
+
+(ff:defun-foreign-callable print-progress ((handle (* libuv:uv_async_t)))
+  (let ((percentage (ff:fslot-value-typed :double :c (libuv:uv_handle_get_data handle))))
+    (format t "Downloaded ~,2f%~%" percentage)
+    (force-output)))
+
+(eval-when (:load-toplevel :execute)
+  (defparameter *fake-download* (ff:register-foreign-callable 'fake-download))
+  (defparameter *after* (ff:register-foreign-callable 'after))
+  (defparameter *print-progress* (ff:register-foreign-callable 'print-progress)))
+
+(defun main ()
+  (declare (special *event-loop* *fake-download* *after* *print-progress*))
+  (let ((req (ff:allocate-fobject 'libuv:uv_work_t))
+        (size (ff:allocate-fobject :int :c)))
+    (setf (ff:fslot-value-typed :int :c size) 10240)
+    (libuv:uv_req_set_data req size)
+    (libuv:uv_async_init *event-loop* *async* *print-progress*)
+    (libuv:uv_queue_work *event-loop* req *fake-download* *after*)
+    (libuv:uv_run *event-loop* (libuv:foreign-enum-value 'libuv:uv_run_mode :UV_RUN_DEFAULT))))
