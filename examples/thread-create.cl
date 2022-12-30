@@ -1,0 +1,60 @@
+;;;; thread-create.cl
+(in-package #:cl-user)
+
+(ff:defun-foreign-callable hare ((arg (* :void)))
+  (let ((tracklen (ff:fslot-value-typed :int :c arg)))
+    (while (not (zerop tracklen))
+      (format t "Tracklen: ~d~%" tracklen)
+      (decf tracklen)
+      (libuv:uv_sleep 1000)
+      (format t "Hare ran another step~%"))
+    (format t "Hare done running!~%")))
+
+(ff:defun-foreign-callable tortoise ((arg (* :void)))
+  (let ((tracklen (ff:fslot-value-typed :int :c arg)))
+    (while (not (zerop tracklen))
+      (format t "Tracklen: ~d~%" tracklen)
+      (decf tracklen)
+      (libuv:uv_sleep 3000)
+      (format t "Tortoise ran another step~%"))
+    (format t "Tortoise done running!~%")))
+
+(eval-when (:load-toplevel :execute)
+  (defparameter *hare* (ff:register-foreign-callable 'hare))
+  (defparameter *tortoise* (ff:register-foreign-callable 'tortoise)))
+
+(defun main ()
+  (declare (special *hare* *tortoise*))
+  (let ((tracklen (ff:allocate-fobject :int :c))
+        (hare-id (ff:allocate-fobject 'libuv:uv_thread_t))
+        (tortoise-id (ff:allocate-fobject 'libuv:uv_thread_t)))
+    (setf (ff:fslot-value-typed :int :c tracklen) 10)
+
+    (libuv:uv_thread_create hare-id *hare* tracklen)
+    (libuv:uv_thread_create tortoise-id *tortoise* tracklen)
+
+    (libuv:uv_thread_join hare-id)
+    (libuv:uv_thread_join tortoise-id)
+
+    (ff:free-fobject tracklen)))
+
+;; (defun hare (tracklen)
+;;   (while (not (zerop tracklen))
+;;     (format t "Tracklen: ~d~%" tracklen)
+;;     (decf tracklen)
+;;     (mp:process-sleep 1)
+;;     (format t "Hare ran another step~%")))
+
+;; (defun tortoise (tracklen)
+;;   (while (not (zerop tracklen))
+;;     (format t "Tracklen: ~d~%" tracklen)
+;;     (decf tracklen)
+;;     (mp:process-sleep 3)
+;;     (format t "Tortoise ran another step~%")))
+
+;; (defun main ()
+;;   (let* ((tracklen 10)
+;;          (hare-process (mp:process-run-function "hare" 'hare tracklen))
+;;          (tortoise-process (mp:process-run-function "tortoise" 'tortoise tracklen)))
+;;     (mp:process-join hare-process)
+;;     (mp:process-join tortoise-process)))
