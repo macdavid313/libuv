@@ -21,11 +21,6 @@ else
         -DCMAKE_TOOLCHAIN_FILE=/opt/toolchain.cmake"
 fi
 
-if [ "$BUILD_TARGET" == "i686-*" ]; then
-    CMAKE_EXTRA_VARS="-DCMAKE_C_FLAGS=-m32 \
-        $CMAKE_EXTRA_VARS"
-fi
-
 cmake ../ ${CMAKE_COMMON_VARS} ${CMAKE_EXTRA_VARS}
 cmake --build .
 cmake --install .
