@@ -4,25 +4,30 @@
 ;;; Error handling
 ;; Error constants generated in uv-constants.cl
 (def-foreign-call uv_strerror ((err uv_error_t))
-  :returning ((* :char) string)
+  :returning ((* :char) simple-string)
+  :arg-checking nil
   :strings-convert t)
 
 (def-foreign-call uv_err_name ((err uv_error_t))
-  :returning ((* :char) string)
+  :returning ((* :char) simple-string)
+  :arg-checking nil
   :strings-convert t)
 
 (def-foreign-call uv_translate_sys_error ((sys_errno :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 ;;; Version-checking macros and functions
-;; TODO: add constants
 (ff:def-foreign-call uv_version (:void)
-  :returning :unsigned-int)
+  :returning :unsigned-int
+  :arg-checking nil
+  :call-direct t)
 
 (ff:def-foreign-call uv_version_string (:void)
   :returning ((* :char) simple-string)
-  :strings-convert t
-  :documentation "Returns the libuv version number as a string. For non-release versions the version suffix is included.")
+  :arg-checking nil
+  :strings-convert t)
 
 ;;; uv_loop_t — Event loop
 (def-foreign-enum uv_loop_option
@@ -35,179 +40,287 @@
   (:UV_RUN_NOWAIT 2))
 
 (def-foreign-call uv_loop_init ((event-loop (* uv_loop_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+;; TODO: uv_loop_configure
 
 (def-foreign-call uv_loop_close ((event-loop (* uv_loop_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_default_loop (:void)
   :returning ((* uv_loop_t))
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_run ((event-loop (* uv_loop_t)) (mode uv_run_mode))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_loop_alive ((event-loop (* uv_loop_t)))
-  :returning :int)
+  :returning (:int boolean)
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_stop ((event-loop (* uv_loop_t)))
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_loop_size (:void)
-  :returning size_t)
+  :returning size_t
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_backend_fd ((event-loop (* uv_loop_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_backend_timeout ((event-loop (* uv_loop_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_now ((event-loop (* uv_loop_t)))
-  :returning uint64_t)
+  :returning uint64_t
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_update_time ((event-loop (* uv_loop_t)))
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_walk ((event-loop (* uv_loop_t)) (walk_cb :foreign-address) (arg (* :void)))
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_loop_fork ((event-loop (* uv_loop_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_loop_get_data ((event-loop (* uv_loop_t)))
-  :returning ((* :void)))
+  :returning ((* :void))
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_loop_set_data ((event-loop (* uv_loop_t)) (data (* :void)))
-  :returning ((* :void)))
+  :returning ((* :void))
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_handle_t — Base handle
 (def-foreign-call uv_is_active ((handle (* uv_handle_t)))
-  :returning :int)
+  :returning (:int boolean)
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_is_closing ((handle (* uv_handle_t)))
-  :returning :int)
+  :returning (:int boolean)
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_close ((handle (* uv_handle_t)) (close_cb :foreign-address))
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_ref ((handle (* uv_handle_t)))
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_unref ((handle (* uv_handle_t)))
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_has_ref ((handle (* uv_handle_t)))
-  :returning :int)
+  :returning (:int boolean)
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_send_buffer_size ((handle (* uv_handle_t)) (value (* :int)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_recv_buffer_size ((handle (* uv_handle_t)) (value (* :int)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_fileno ((handle (* uv_hanle_t)) (fd (* uv_os_fd_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_handle_get_loop ((handle (* uv_handle_t)))
-  :returning ((* uv_loop_t)))
+  :returning ((* uv_loop_t))
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_handle_get_data ((handle (* uv_handle_t)))
-  :returning ((* :void)))
+  :returning ((* :void))
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_handle_set_data ((handle (* uv_handle_t)) (data (* :void)))
-  :returning ((* :void)))
+  :returning ((* :void))
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_handle_get_type ((handle (* uv_handle_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_handle_type_name ((type uv_handle_type))
-  :returning ((* :char) string)
-  :strings-convert t)
+  :returning ((* :char) simple-string)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_handle_size ((type uv_handle_type))
-  :returning size_t)
+  :returning size_t
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_req_t — Base request
 (def-foreign-call uv_cancel ((req (* uv_req_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_req_get_data ((req (* uv_req_t)))
-  :returning ((* :void)))
+  :returning ((* :void))
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_req_set_data ((req (* uv_req_t)) (data (* :void)))
-  :returning ((* :void)))
+  :returning ((* :void))
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_req_get_type ((req (* uv_req_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_req_type_name ((type uv_req_type fixnum))
   :returning ((* :char) simple-string)
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_req_size ((type uv_req_type fixnum))
-  :returning size_t)
+  :returning size_t
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_timer_t — Timer handle
 (def-foreign-call uv_timer_init ((event-loop (* uv_loop_t)) (handle (* uv_timer_t)))
   :returning :int)
+  :arg-checking nil
+  :call-direct t
 
 (def-foreign-call uv_timer_start ((handle (* uv_timer_t))
                                   (cb :foreign-address)
                                   (timeout uint64_t)
                                   (repeat uint64_t))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_timer_stop ((handle (* uv_timer_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_timer_again ((handle (* uv_timer_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_timer_set_repeat ((handle (* uv_timer_t)) (repeat uint64_t))
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_timer_get_repeat ((handle (* uv_timer_t)))
-  :returning uint64_t)
+  :returning uint64_t
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_timer_get_due_in ((handle (* uv_timer_t)))
-  :returning uint64_t)
+  :returning uint64_t
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_prepare_t — Prepare handle
 (def-foreign-call uv_prepare_init ((event-loop (* uv_loop_t)) (handle (* uv_prepare_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_prepare_start ((handle (* uv_prepare_t)) (cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_prepare_stop ((handle (* uv_prepare_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_check_t — Check handle
 (def-foreign-call uv_check_init ((event-loop (* uv_loop_t)) (handle (* uv_check_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_check_start ((handle (* uv_check_t)) (cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_check_stop ((handle (* uv_check_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_idle_t — Idle handle
 (def-foreign-call uv_idle_init ((event-loop (* uv_loop_t)) (handle (* uv_idle_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_idle_start ((handle (* uv_idle_t)) (cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_idle_stop ((handle (* uv_idle_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_async_t — Async handle
 (def-foreign-call uv_async_init ((event-loop (* uv_loop_t)) (handle (* uv_async_t)) (cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_async_send ((handle (* uv_async_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_poll_t — Poll handle
 (def-foreign-enum uv_poll_event
@@ -217,30 +330,45 @@
   (:UV_PRIORITIZED 8))
 
 (def-foreign-call uv_poll_init ((event-loop (* uv_loop_t)) (handle (* uv_poll_t)) (fd :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_poll_init_socket ((event-loop (* uv_loop_t)) (handle (* uv_poll_t)) (socket uv_os_sock_t))
   :returning :int
-  :pass-structs-by-value t)
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_poll_start ((handle (* uv_poll_t)) (events :int) (cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_poll_stop ((handle (* uv_poll_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_signal_t — Signal handle
 (def-foreign-call uv_signal_init ((event-loop (* uv_loop_t)) (handle (* uv_signal_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_signal_start ((handle (* uv_signal_t)) (cb :foreign-address) (signum :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_signal_start_oneshot ((handle (* uv_signal_t)) (cb :foreign-address) (signum :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_signal_stop ((handle (* uv_signal_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_process_t — Process handle
 (def-foreign-enum uv_process_flags
@@ -281,42 +409,64 @@
      (gid uv_gid_t)))
 
 (def-foreign-call uv_disable_stdio_inheritance (:void)
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_spawn ((event-loop (* uv_loop_t)) (handle (* uv_process_t)) (options (* uv_process_options_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_process_kill ((handle (* uv_process_t)) (signum :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_kill ((pid :int) (signum :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_process_get_pid ((handle (* uv_process_t)))
-  :returning uv_pid_t)
+  :returning uv_pid_t
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_stream_t — Stream handle
 (def-foreign-call uv_shutdown ((req (* uv_shutdown_t)) (handle (* uv_stream_t)) (cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_listen ((stream (* uv_stream_t)) (backlog :int) (cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_accept ((server (* uv_stream_t)) (client (* uv_stream_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_read_start ((stream (* uv_stream_t)) (alloc_cb :foreign-address) (read_cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_read_stop ((handle (* uv_stream_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_write ((req (* uv_write_t))
                             (handle (* uv_stream_t))
                             (bufs (:array uv_buf_t))
                             (nbufs :unsigned-int)
                             (cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_write2 ((req (* uv_write_t))
                              (handle (* uv_stream_t))
@@ -324,107 +474,163 @@
                              (nbufs :unsigned-int)
                              (send_handle (* uv_stream_t))
                              (cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_try_write ((handle (* uv_stream_t))
                                 (bufs (:array uv_buf_t))
                                 (nbufs :unsigned-int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_try_write2 ((handle (* uv_stream_t))
                                  (bufs (:array uv_buf_t))
                                  (nbufs :unsigned-int)
                                  (send_handle (* uv_stream_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_is_readable ((handle (* uv_stream_t)))
-  :returning :int)
+  :returning (:int boolean)
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_is_writable ((handle (* uv_stream_t)))
-  :returning :int)
+  :returning (:int boolean)
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_stream_set_blocking ((handle (* uv_stream_t)) (blocking :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_stream_get_write_queue_size ((stream (* uv_stream_t)))
-  :returning size_t)
+  :returning size_t
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_tcp_t — TCP handle
 (def-foreign-call uv_tcp_init ((event-loop (* uv_loop_t)) (handle (* uv_tcp_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_tcp_init_ex ((event-loop (* uv_loop_t)) (handle (* uv_tcp_t)) (flags :unsigned-int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_tcp_open ((handle (* uv_tcp_t)) (sock uv_os_sock_t))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_tcp_nodelay ((handle (* uv_tcp_t)) (enable :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_tcp_keepalive ((handle (* uv_tcp_t)) (enable :int) (delay :unsigned-int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_tcp_simultaneous_accepts ((handle (* uv_tcp_t)) (enable :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_tcp_bind ((handle (* uv_tcp_t)) (addr (* sockaddr)) (flags :unsigned-int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_tcp_getsockname ((handle (* uv_tcp_t)) (name (* sockaddr)) (namelen (* :int)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_tcp_getpeername ((handle (* uv_tcp_t)) (name (* sockaddr)) (namelen (* :int)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_tcp_connect ((handle (* uv_tcp_t)) (addr (* sockaddr)) (cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_tcp_close_reset ((handle (* uv_tcp_t)) (cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_socketpair ((type :int)
                                  (protocol :int)
                                  (socket_vector (:array uv_os_sock_t 2))
                                  (flags0 :int)
                                  (flags1 :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_pipe_t — Pipe handle
 (def-foreign-call uv_pipe_init ((event-loop (* uv_loop_t)) (handle (* uv_pipe_t)) (ipc :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_pipe_open ((handle (* uv_pipe_t)) (file uv_file))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_pipe_bind ((handle (* uv_pipe_t)) (name (* :char)))
   :returning :int
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_pipe_connect ((req (* uv_connect_t)) (handle (* uv_pipe_t)) (name (* :char)) (cb :foreign-address))
   :returning :void
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_pipe_getsockname ((handle (* uv_pipe_t)) (buffer (* :char)) (size (* size_t)))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_pipe_getpeername ((handle (* uv_pipe_t)) (buffer (* :char)) (size (* size_t)))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 #+windows
 (def-foreign-call uv_pipe_pending_instances ((handle (* uv_pipe_t)) (count :int))
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_pipe_pending_count ((handle (* uv_pipe_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_pipe_chmod ((handle (* uv_pipe_t)) (flags :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_pipe ((fds (:array uv_file 2)) (read_flags :int) (write_flags :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_tty_t — TTY handle
 (def-foreign-enum uv_tty_mode_t
@@ -441,22 +647,34 @@
   (:UV_TTY_UNSUPPORTED 1))
 
 (def-foreign-call uv_tty_init ((event-loop (* uv_loop_t)) (handle (* uv_tty_t)) (fd uv_file) (unused :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_tty_set_mode ((handle (* uv_tty_t)) (mode uv_tty_mode_t))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_tty_reset_mode (:void)
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_tty_get_winsize ((handle (* uv_tty_t)) (width (* :int)) (height (* :int)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_tty_set_vterm_state ((state uv_tty_vtermstate_t))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_tty_get_vterm_state ((state (* uv_tty_vtermstate_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_udp_t — UDP handle
 (def-foreign-enum uv_udp_flags
@@ -473,29 +691,44 @@
   (:UV_JOIN_GROUP  1))
 
 (def-foreign-call uv_udp_init ((event-loop (* uv_loop_t)) (handle (* uv_udp_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_init_ex ((event-loop (* uv_loop_t)) (handle (* uv_udp_t)) (flags :unsigned-int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_open ((handle (* uv_udp_t)) (sock uv_os_sock_t))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_bind ((handle (* uv_udp_t)) (addr (* sockaddr)) (flags :unsigned-int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_connect ((handle (* uv_udp_t)) (addr (* sockaddr)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_getpeername ((handle (* uv_udp_t)) (name (* sockaddr)) (namelen (* :int)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_getsockname ((handle (* uv_udp_t)) (name (* sockaddr)) (namelen (* :int)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_set_membership ((handle (* uv_udp_t)) (multicast_addr (* :char)) (interface_addr (* :char)) (membership uv_membership))
   :returning :int
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_udp_set_source_membership ((handle (* uv_udp_t))
                                                 (multicast_addr (* :char))
@@ -503,23 +736,33 @@
                                                 (source_addr (* :char))
                                                 (membership uv_membership))
   :returning :int
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_udp_set_multicast_loop ((handle (* uv_udp_t)) (on :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_set_multicast_ttl ((handle (* uv_udp_t)) (ttl :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_set_multicast_interface ((handle (* uv_udp_t)) (interface_addr (* :char)))
   :returning :int
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_udp_set_broadcast ((handle (* uv_udp_t)) (on :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_set_ttl ((handle (* uv_udp_t)) (ttl :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_send ((req (* uv_udp_send_t))
                                (handle (* uv_udp_t))
@@ -527,28 +770,42 @@
                                (nbufs :unsigned-int)
                                (addr (* sockaddr))
                                (send_cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_try_send ((handle (* uv_udp_t))
                                    (bufs (:array uv_buf_t))
                                    (nbufs :unsigned-int)
                                    (addr (* sockaddr)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_recv_start ((handle (* uv_udp_t)) (alloc_cb :foreign-address) (recv_cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_using_recvmmsg ((handle (* uv_udp_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_recv_stop ((handle (* uv_udp_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_get_send_queue_size ((handle (* uv_udp_t)))
-  :returning size_t)
+  :returning size_t
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_udp_get_send_queue_count ((handle (* uv_udp_t)))
-  :returning size_t)
+  :returning size_t
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_fs_event_t — FS Event handle
 (def-foreign-enum uv_fs_event
@@ -561,41 +818,55 @@
   (:UV_FS_EVENT_RECURSIVE   4))
 
 (def-foreign-call uv_fs_event_init ((event-loop (* uv_loop_t)) (handle (* uv_fs_event_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_fs_event_start ((handle (* uv_fs_event_t))
                                      (cb :foreign-address)
                                      (path (* :char) simple-string)
                                      (flags :unsigned-int))
   :returning :int
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_fs_event_stop ((handle (* uv_fs_event_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_fs_event_getpath ((handle (* uv_fs_event_t)) (buffer (* :char)) (size (* szie_t)))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 ;;; uv_fs_poll_t — FS Poll handle
 (def-foreign-call uv_fs_poll_init ((event-loop (* uv_loop_t)) (handle (* uv_fs_poll_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_fs_poll_start ((handle (* uv_fs_poll_t))
                                     (cb :foreign-address)
                                     (path (* :char) simple-string)
                                     (iterval :unsigned-int))
   :returning :int
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_fs_poll_stop ((handle (* uv_fs_poll_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_fs_poll_getpath ((handle (* uv_fs_poll_t))
                                       (buffer (* :char))
                                       (size (* size_t)))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 ;;; File system operations
 ;;; TODO
@@ -605,7 +876,9 @@
                                  (req (* uv_work_t))
                                  (work_cb :foreign-address)
                                  (after_work_cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 ;;; DNS utility functions
 (def-foreign-call uv_getaddrinfo ((event-loop (* uv_loop_t))
@@ -615,22 +888,28 @@
                                   (server (* :char) simple-string)
                                   (hints (* addrinfo)))
   :returning :int
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_freeaddrinfo ((ai (* addrinfo)))
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_getnameinfo ((event-loop (* uv_loop_t))
                                   (req (* uv_getnameinfo_t))
                                   (getnameinfo_cb :foreign-address)
                                   (addr (* sockaddr))
                                   (flags :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 ;;; Shared library handling
 (def-foreign-call uv_dlopen ((filename (* :char)) (lib (* uv_lib_t)))
   :returning :int
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_dlclose ((lib (* uv_lib_t)))
   :returning :void
@@ -642,7 +921,7 @@
   :strings-convert t)
 
 (def-foreign-call uv_dlerror ((lib (* uv_lib_t)))
-  :returning ((* :char))
+  :returning ((* :char) simple-string)
   :strings-convert t)
 
 ;;; Threading and synchronization utilities
@@ -942,17 +1221,23 @@
 
 ;; API
 (def-foreign-call uv_guess_handle ((file uv_file))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 
 (def-foreign-call uv_replace_allocator ((malloc_func :foreign-address)
                                         (realloc_func :foreign-address)
                                         (calloc_func :foreign-address)
                                         (free_fun :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_library_shutdown (:void)
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 ;; we don't really need it ...
 ;; (def-foreign-call uv_buf_init ((base (* :char)) (len :unsigned-int))
@@ -962,192 +1247,281 @@
 
 (def-foreign-call uv_setup_args ((argc :int)
                                  (argv (:array (* :char)) (simple-array simple-string)))
-  :returning ((:array (* :char)) (simple-array simple-string)))
+  :returning ((:array (* :char)) (simple-array simple-string))
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_get_process_title ((buffer (* :char)) (size size_t))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_set_process_title ((title (* :char) simple-string))
   :returning :int
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_resident_set_memory ((rss (* size_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_uptime ((uptime (* :double)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_getrusage ((rusage (* uv_rusage_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_os_getpid (:void)
-  :returning uv_pid_t)
+  :returning uv_pid_t
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_os_getppid (:void)
-  :returning uv_pid_t)
+  :returning uv_pid_t
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_available_parallelism (:void)
-  :returning :unsigned-int)
+  :returning :unsigned-int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_cpu_info ((cpu_infos (:array uv_cpu_info_t)) (count (* :int)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_free_cpu_info ((cpu_infos (* uv_cpu_info_t)) (count :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_cpumask_size (:void)
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_interface_addresses ((addresses (:array uv_interface_address_t))
                                           (count (* :int)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_free_interface_addresses ((addresses (* uv_interface_address_t))
                                                (count :int))
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_loadavg ((avg (:array :double 3)))
   :returning :void
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_ip4_addr ((ip (* :char) simple-string)
                                (port :int)
                                (addr (* sockaddr_in)))
   :returning :int
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_ip6_addr ((ip (* :char) simple-string)
                                (port :int)
                                (addr (* sockaddr_in6)))
   :returning :int
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_ip4_name ((src (* sockaddr_in))
                                (dst (* :char))
                                (size (* size_t)))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_ip6_name ((src (* sockaddr_in6))
                                (dst (* :char))
                                (size (* size_t)))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_ip_name ((src (* sockaddr))
                               (dst (* :char))
                               (size (* size_t)))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_inet_ntop ((af :int)
                                 (src (* :void))
                                 (dst (* :char))
                                 (size (* size_t)))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_inet_pton ((af :int)
                                 (src (* :char) simple-string)
                                 (dst (* :void)))
   :returning :int
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_if_indextoname ((ifindex :unsigned-int) (buffer (* :char)) (size (* size_t)))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_if_indextoiid ((ifindex :unsigned-int) (buffer (* :char)) (size (* size_t)))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_exepath ((buffer (* :char)) (size (* size_t)))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_cwd ((buffer (* :char)) (size (* size_t)))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_chdir ((dir (* :char) simple-string))
   :returning :int
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_os_homedir ((buffer (* :char)) (size (* size_t)))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_os_tmpdir ((buffer (* :char)) (size (* size_t)))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_os_get_passwd ((pwd (* uv_passwd_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_os_free_passwd ((pwd (* uv_passwd_t)))
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_get_free_memory (:void)
-  :returning uint64_t)
+  :returning uint64_t
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_get_total_memory (:void)
-  :returning uint64_t)
+  :returning uint64_t
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_get_constrained_memory (:void)
-  :returning uint64_t)
+  :returning uint64_t
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_get_available_memory (:void)
-  :returning uint64_t)
+  :returning uint64_t
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_hrtime (:void)
-  :returning uint64_t)
+  :returning uint64_t
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_print_all_handles ((event-loop (* uv_loop_t)) (stream :foreign-address))
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_print_active_handles ((event-loop (* uv_loop_t)) (stream :foreign-address))
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_os_environ ((envitems (:array uv_env_item_t) (simple-array uv_env_item_t))
                                  (count (* :int)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_os_free_environ ((envitems (:array uv_env_item_t) (simple-array uv_env_item_t))
                                       (count :int))
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
-(def-foreign-call uv_os_getenv ((name (* :char) simple-string)
+(def-foreign-call uv_os_getenv ((name (* :char))
                                 (buffer (* :char))
                                 (size (* size_t)))
   :returning :int
-  :strings-convert t)
+  :strings-convert nil
+  :arg-checking nil)
 
 (def-foreign-call uv_os_setenv ((name (* :char) simple-string)
                                 (value (* :char) simple-string))
   :returning :int
-  :strings-convert t)
+  :strings-convert t
+  :arg-checking nil)
 
 (def-foreign-call uv_os_unsetenv ((name (* :char) simple-string))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_os_gethostname ((buffer (* :char))
                                      (size (* size_t)))
   :returning :int
-  :strings-convert nil)
+  :strings-convert nil
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_os_getpriority ((pid uv_pid_t) (priority (* :int)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_os_setpriority ((pid uv_pid_t) (priority :int))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_os_uname ((buffer (* uv_utsname_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_gettimeofday ((tv (* uv_timeval64_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_random ((event-loop (* uv_loop_t))
                              (req (* uv_random_t))
@@ -1155,10 +1529,14 @@
                              (buflen size_t)
                              (flags :unsigned-int)
                              (cb :foreign-address))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_sleep ((msec :unsigned-int))
-  :returning :void)
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
 
 ;;; Metrics operations
 (def-foreign-type uv_metrics_t
@@ -1169,7 +1547,11 @@
      (reserved (:array uint64_t 13))))
 
 (def-foreign-call uv_metrics_idle_time ((event-loop (* uv_loop_t)))
-  :returning uint64_t)
+  :returning uint64_t
+  :arg-checking nil
+  :call-direct t)
 
 (def-foreign-call uv_metrics_info ((event-loop (* uv_loop_t)) (metrics (* uv_metrics_t)))
-  :returning :int)
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
