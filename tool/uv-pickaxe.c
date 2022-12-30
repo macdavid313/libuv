@@ -96,6 +96,33 @@ int main(int argc, char** argv) {
   fprintf(output, "(defconstant +UV_VERSION_SUFFIX+ \"%s\")\n", UV_VERSION_SUFFIX);
   fprintf(output, "(defconstant +UV_VERSION_HEX+ %d)\n\n\n", UV_VERSION_HEX);
 
+  fputs(";;; File system operations\n", output);
+#define XX(name) fprintf(output, "(defconstant +%s+ %d)\n", #name, name);
+  XX(UV_FS_O_APPEND);
+  XX(UV_FS_O_CREAT);
+  XX(UV_FS_O_DIRECT);
+  XX(UV_FS_O_DIRECTORY);
+  XX(UV_FS_O_DSYNC);
+  XX(UV_FS_O_EXCL);
+  XX(UV_FS_O_EXLOCK);
+  XX(UV_FS_O_FILEMAP);
+  XX(UV_FS_O_NOATIME);
+  XX(UV_FS_O_NOCTTY);
+  XX(UV_FS_O_NOFOLLOW);
+  XX(UV_FS_O_NONBLOCK);
+  XX(UV_FS_O_RANDOM);
+  XX(UV_FS_O_RDONLY);
+  XX(UV_FS_O_RDWR);
+  XX(UV_FS_O_SEQUENTIAL);
+  XX(UV_FS_O_SHORT_LIVED);
+  XX(UV_FS_O_SYMLINK);
+  XX(UV_FS_O_SYNC);
+  XX(UV_FS_O_TEMPORARY);
+  XX(UV_FS_O_TRUNC);
+  XX(UV_FS_O_WRONLY);
+#undef XX
+  fputs("\n\n", output);
+
   fputs(";;; Shared library handling\n", output);
   fprintf(output, "(def-foreign-type uv_lib_t (:array :unsigned-char %zu))\n", sizeof(uv_lib_t));
   fputs("\n\n", output);

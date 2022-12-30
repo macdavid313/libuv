@@ -170,6 +170,31 @@
 (defconstant +UV_VERSION_HEX+ 76802)
 
 
+;;; File system operations
+(defconstant +UV_FS_O_APPEND+ 1024)
+(defconstant +UV_FS_O_CREAT+ 64)
+(defconstant +UV_FS_O_DIRECT+ 16384)
+(defconstant +UV_FS_O_DIRECTORY+ 65536)
+(defconstant +UV_FS_O_DSYNC+ 4096)
+(defconstant +UV_FS_O_EXCL+ 128)
+(defconstant +UV_FS_O_EXLOCK+ 0)
+(defconstant +UV_FS_O_FILEMAP+ 0)
+(defconstant +UV_FS_O_NOATIME+ 0)
+(defconstant +UV_FS_O_NOCTTY+ 256)
+(defconstant +UV_FS_O_NOFOLLOW+ 131072)
+(defconstant +UV_FS_O_NONBLOCK+ 2048)
+(defconstant +UV_FS_O_RANDOM+ 0)
+(defconstant +UV_FS_O_RDONLY+ 0)
+(defconstant +UV_FS_O_RDWR+ 2)
+(defconstant +UV_FS_O_SEQUENTIAL+ 0)
+(defconstant +UV_FS_O_SHORT_LIVED+ 0)
+(defconstant +UV_FS_O_SYMLINK+ 0)
+(defconstant +UV_FS_O_SYNC+ 1052672)
+(defconstant +UV_FS_O_TEMPORARY+ 0)
+(defconstant +UV_FS_O_TRUNC+ 512)
+(defconstant +UV_FS_O_WRONLY+ 1)
+
+
 ;;; Shared library handling
 (def-foreign-type uv_lib_t (:array :unsigned-char 16))
 

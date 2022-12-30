@@ -226,9 +226,9 @@
 
 ;;; uv_timer_t — Timer handle
 (def-foreign-call uv_timer_init ((event-loop (* uv_loop_t)) (handle (* uv_timer_t)))
-  :returning :int)
+  :returning :int
   :arg-checking nil
-  :call-direct t
+  :call-direct t)
 
 (def-foreign-call uv_timer_start ((handle (* uv_timer_t))
                                   (cb :foreign-address)
@@ -869,7 +869,469 @@
   :call-direct t)
 
 ;;; File system operations
-;;; TODO
+(def-foreign-type uv_timespec_t
+    (:struct
+     (tv_sec :long)
+     (tv_nsec :long)))
+
+(def-foreign-type uv_stat_t
+    (:struct
+     (st_dev uint64_t)
+     (st_mode uint64_t)
+     (st_nlink uint64_t)
+     (st_uid uint64_t)
+     (st_gid uint64_t)
+     (st_rdev uint64_t)
+     (st_ino uint64_t)
+     (st_size uint64_t)
+     (st_blksize uint64_t)
+     (st_blocks uint64_t)
+     (st_flags uint64_t)
+     (st_gen uint64_t)
+     (st_atim uv_timespec_t)
+     (st_mtim uv_timespec_t)
+     (st_ctim uv_timespec_t)
+     (st_birthtim uv_timespec_t)))
+
+(def-foreign-enum uv_fs_type
+  (:UV_FS_UNKNOWN   -1)
+  (:UV_FS_CUSTOM     0)
+  (:UV_FS_OPEN       1)
+  (:UV_FS_CLOSE      2)
+  (:UV_FS_READ       3)
+  (:UV_FS_WRITE      4)
+  (:UV_FS_SENDFILE   5)
+  (:UV_FS_STAT       6)
+  (:UV_FS_LSTAT      7)
+  (:UV_FS_FSTAT      8)
+  (:UV_FS_FTRUNCATE  9)
+  (:UV_FS_UTIME     10)
+  (:UV_FS_FUTIME    11)
+  (:UV_FS_ACCESS    12)
+  (:UV_FS_CHMOD     13)
+  (:UV_FS_FCHMOD    14)
+  (:UV_FS_FSYNC     15)
+  (:UV_FS_FDATASYNC 16)
+  (:UV_FS_UNLINK    17)
+  (:UV_FS_RMDIR     18)
+  (:UV_FS_MKDIR     19)
+  (:UV_FS_MKDTEMP   20)
+  (:UV_FS_RENAME    21)
+  (:UV_FS_SCANDIR   22)
+  (:UV_FS_LINK      23)
+  (:UV_FS_SYMLINK   24)
+  (:UV_FS_READLINK  25)
+  (:UV_FS_CHOWN     26)
+  (:UV_FS_FCHOWN    27)
+  (:UV_FS_REALPATH  28)
+  (:UV_FS_COPYFILE  29)
+  (:UV_FS_LCHOWN    30)
+  (:UV_FS_OPENDIR   31)
+  (:UV_FS_READDIR   32)
+  (:UV_FS_CLOSEDIR  33)
+  (:UV_FS_MKSTEMP   34)
+  (:UV_FS_LUTIME    35))
+
+(def-foreign-type uv_statfs_t
+    (:struct
+     (f_type uint64_t)
+     (f_bsize uint64_t)
+     (f_blocks uint64_t)
+     (f_bfree uint64_t)
+     (f_bavail uint64_t)
+     (f_files uint64_t)
+     (f_ffree uint64_t)
+     (f_spare (:array uint64_t 4))))
+
+(def-foreign-enum uv_dirent_type_t
+  (:UV_DIRENT_UNKNOWN 0)
+  (:UV_DIRENT_FILE    1)
+  (:UV_DIRENT_DIR     2)
+  (:UV_DIRENT_LINK    3)
+  (:UV_DIRENT_FIFO    4)
+  (:UV_DIRENT_SOCKET  5)
+  (:UV_DIRENT_CHAR    6)
+  (:UV_DIRENT_BLOCK   7))
+
+(def-foreign-type uv_dirent_t
+    (:struct
+     (name (* :char) simple-string)
+     (type uv_dirent_type_t)))
+
+(def-foreign-type uv_dir_t
+    (:struct
+     (dirents (* uv_dirent_t))
+     (nentries size_t)))
+
+(def-foreign-call uv_fs_req_cleanup ((req (* uv_fs_t)))
+  :returning :void
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_close ((event-loop (* uv_loop_t))
+                               (req (* uv_fs_t))
+                               (file uv_file)
+                               (cb :foreign-address))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_open ((event-loop (* uv_loop_t))
+                              (req (* uv_fs_t))
+                              (path (* :char) simple-string)
+                              (flags :int)
+                              (mode :int)
+                              (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_read ((event-loop (* uv_loop_t))
+                              (req (* uv_fs_t))
+                              (file uv_file)
+                              (bufs (:array uv_buf_t))
+                              (nbufs :unsigned-int)
+                              (offset int64_t)
+                              (cb :foreign-address))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_unlink ((event-loop (* uv_loop_t))
+                                (req (* uv_fs_t))
+                                (path (* :char) simple-string)
+                                (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_write ((event-loop (* uv_loop_t))
+                               (req (* uv_fs_t))
+                               (file uv_file)
+                               (bufs (:array uv_buf_t))
+                               (nbufs :unsigned-int)
+                               (offset int64_t)
+                               (cb :foreign-address))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_mkdir ((event-loop (* uv_loop_t))
+                               (req (* uv_fs_t))
+                               (path (* :char) simple-string)
+                               (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_mkdtemp ((event-loop (* uv_loop_t))
+                                 (req (* uv_fs_t))
+                                 (tpl (* :char) simple-string)
+                                 (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_mkstemp ((event-loop (* uv_loop_t))
+                                 (req (* uv_fs_t))
+                                 (tpl (* :char) simple-string)
+                                 (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_rmdir ((event-loop (* uv_loop_t))
+                               (req (* uv_fs_t))
+                               (path (* :char) simple-string)
+                               (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_opendir ((event-loop (* uv_loop_t))
+                                 (req (* uv_fs_t))
+                                 (path (* :char) simple-string)
+                                 (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_closedir ((event-loop (* uv_loop_t))
+                                  (req (* uv_fs_t))
+                                  (dir (* uv_dir_t))
+                                  (cb :foreign-address))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_readdir ((event-loop (* uv_loop_t))
+                                 (req (* uv_fs_t))
+                                 (dir (* uv_dir_t))
+                                 (cb :foreign-address))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_scandir ((event-loop (* uv_loop_t))
+                                 (req (* uv_fs_t))
+                                 (path (* :char) simple-string)
+                                 (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_scandir_next ((req (* uv_fs_t)) (ent (* uv_dirent_t)))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_stat ((event-loop (* uv_loop_t))
+                              (req (* uv_fs_t))
+                              (path (* :char) simple-string)
+                              (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_fstat ((event-loop (* uv_loop_t))
+                               (req (* uv_fs_t))
+                               (file uv_file)
+                               (cb :foreign-address))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_lstat ((event-loop (* uv_loop_t))
+                               (req (* uv_fs_t))
+                               (path (* :char) simple-string)
+                               (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_statfs ((event-loop (* uv_loop_t))
+                                (req (* uv_fs_t))
+                                (path (* :char) simple-string)
+                                (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_rename ((event-loop (* uv_loop_t))
+                                (req (* uv_fs_t))
+                                (path (* :char) simple-string)
+                                (new_path (* :char) simple-string)
+                                (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_fsync ((event-loop (* uv_loop_t))
+                               (req (* uv_fs_t))
+                               (file uv_file)
+                               (cb :foreign-address))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_fdatasync ((event-loop (* uv_loop_t))
+                                   (req (* uv_fs_t))
+                                   (file uv_file)
+                                   (cb :foreign-address))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_ftruncate ((event-loop (* uv_loop_t))
+                                   (req (* uv_fs_t))
+                                   (file uv_file)
+                                   (offset int64_t)
+                                   (cb :foreign-address))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_copyfile ((event-loop (* uv_loop_t))
+                                  (req (* uv_fs_t))
+                                  (path (* :char) simple-string)
+                                  (new_path (* :char) simple-string)
+                                  (flags :int)
+                                  (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_sendfile ((event-loop (* uv_loop_t))
+                                  (req (* uv_fs_t))
+                                  (out_fd uv_file)
+                                  (in_fd uv_file)
+                                  (in_offset int64_t)
+                                  (length size_t)
+                                  (cb :foreign-address))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_access ((event-loop (* uv_loop_t))
+                                (req (* uv_fs_t))
+                                (path (* :char) simple-string)
+                                (mode :int)
+                                (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_chmod ((event-loop (* uv_loop_t))
+                               (req (* uv_fs_t))
+                               (path (* :char) simple-string)
+                               (mode :int)
+                               (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_fchmod ((event-loop (* uv_loop_t))
+                                (req (* uv_fs_t))
+                                (file uv_file)
+                                (mode :int)
+                                (cb :foreign-address))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_utime ((event-loop (* uv_loop_t))
+                               (req (* uv_fs_t))
+                               (path (* :char) simple-string)
+                               (atime :double)
+                               (mtime :double)
+                               (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_futime ((event-loop (* uv_loop_t))
+                                (req (* uv_fs_t))
+                                (file uv_file)
+                                (atime :double)
+                                (mtime :double)
+                                (cb :foreign-address))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_lutime ((event-loop (* uv_loop_t))
+                                (req (* uv_fs_t))
+                                (path (* :char) simple-string)
+                                (atime :double)
+                                (mtime :double)
+                                (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_link ((event-loop (* uv_loop_t))
+                              (req (* uv_fs_t))
+                              (path (* :char) simple-string)
+                              (new_path (* :char) simple-string)
+                              (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_symlink ((event-loop (* uv_loop_t))
+                                 (req (* uv_fs_t))
+                                 (path (* :char) simple-string)
+                                 (new_path (* :char) simple-string)
+                                 (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_readlink ((event-loop (* uv_loop_t))
+                                  (req (* uv_fs_t))
+                                  (path (* :char) simple-string)
+                                  (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_realpath ((event-loop (* uv_loop_t))
+                                  (req (* uv_fs_t))
+                                  (path (* :char) simple-string)
+                                  (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_chown ((event-loop (* uv_loop_t))
+                               (req (* uv_fs_t))
+                               (path (* :char) simple-string)
+                               (uid uv_uid_t)
+                               (gid uv_gid_t)
+                               (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_fchown ((event-loop (* uv_loop_t))
+                                (req (* uv_fs_t))
+                                (file uv_file)
+                                (uid uv_uid_t)
+                                (gid uv_gid_t)
+                                (cb :foreign-address))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_lchown ((event-loop (* uv_loop_t))
+                                (req (* uv_fs_t))
+                                (path (* :char) simple-string)
+                                (uid uv_uid_t)
+                                (gid uv_gid_t)
+                                (cb :foreign-address))
+  :returning :int
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_get_type ((req (* uv_fs_t)))
+  :returning uv_fs_type
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_get_result ((req (* uv_fs_t)))
+  :returning ssize_t
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_get_system_error ((req (* uv_fs_t)))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_get_ptr ((req (* uv_fs_t)))
+  :returning ((* :void))
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_fs_get_path ((req (* uv_fs_t)))
+  :returning ((* :char) simple-string)
+  :strings-convert t
+  :arg-checking nil)
+
+(def-foreign-call uv_fs_get_statbuf ((req (* uv_fs_t)))
+  :returning ((* uv_stat_t))
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_get_osfhandle ((fd :int))
+  :returning uv_os_fd_t
+  :arg-checking nil
+  :call-direct t)
+
+(def-foreign-call uv_open_osfhandle ((os_fd uv_os_fd_t))
+  :returning :int
+  :arg-checking nil
+  :call-direct t)
 
 ;;; Thread pool work scheduling
 (def-foreign-call uv_queue_work ((event-loop (* uv_loop_t))
